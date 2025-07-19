@@ -1,0 +1,147 @@
+body { font-family: Arial, sans-serif; text-align: center; }
+.hidden { display: none; }
+.screen { margin-top: 40px; }
+.err { color: red; font-size: 0.9em; margin-left: 4px; }
+#slots { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
+.slot { width: 80px; height: 80px; border: 1px dashed #aaa; display: flex; align-items: center; justify-content: center; }
+.stamp-img { width: 80px; height: 80px; }
+#dial-area { display: flex; justify-content: center; gap: 10px; margin: 20px 0; }
+.dial { width: 50px; height: 70px; border: 1px solid #666; display: flex; align-items: center; justify-content: center; font-size: 2em; user-select: none; cursor: pointer; }
+.overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.8); color: #fff; font-size: 2em; z-index: 20; }
+#complete-overlay { background: #000; color: transparent; -webkit-background-clip: text; background-image: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet); animation: rainbow 5s linear infinite; }
+
+@keyframes rainbow {
+  0% { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(360deg); }
+}
+
+#confetti {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.confetti-piece {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  opacity: 0.8;
+  animation: fall linear forwards;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(100vh) rotate(360deg);
+  }
+}
+
+#stampEffect {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  pointer-events: none;
+  overflow: hidden;
+}
+#stampEffect.show {
+  display: block;
+}
+
+#stampEffect.show .darken {
+  animation: darken 0.5s forwards;
+}
+
+#stampEffect.show .flash {
+  animation: flash 0.3s 0.5s forwards;
+}
+
+#stampEffect.show .glow {
+  animation: glow 0.8s 0.3s forwards;
+}
+
+#stampEffect.show .stamp {
+  animation: spinpop 0.8s 0.3s forwards;
+}
+
+#stampEffect .darken,
+#stampEffect .flash {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+
+#stampEffect .darken { background: #000; }
+#stampEffect .flash { background: #fff; }
+
+#stampEffect .glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200px;
+  height: 200px;
+  margin-left: -100px;
+  margin-top: -100px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,0,0.8), rgba(255,0,0,0));
+  opacity: 0;
+  transform: scale(0);
+}
+
+#stampEffect .stamp {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: red;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5em;
+}
+
+#stampConfetti {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+@keyframes darken { to { opacity: 0.8; } }
+@keyframes flash {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
+@keyframes pop {
+  0% { transform: translate(-50%, -50%) scale(0); }
+  70% { transform: translate(-50%, -50%) scale(1.2); }
+  100% { transform: translate(-50%, -50%) scale(1); }
+}
+
+@keyframes spinpop {
+  0% { transform: translate(-50%, -50%) scale(0) rotate(0deg); }
+  70% { transform: translate(-50%, -50%) scale(1.3) rotate(720deg); }
+  100% { transform: translate(-50%, -50%) scale(1) rotate(720deg); }
+}
+
+@keyframes glow {
+  from { transform: scale(0); opacity: 1; }
+  to { transform: scale(1.5); opacity: 0; }
+}
