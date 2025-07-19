@@ -1,32 +1,36 @@
-var SHEET_NAME = 'users';
-var CODE_SHEET = 'codes';
+var USERS_SHEET = 'users';
+var CODES_SHEET = 'codes';
+
+function initSheets() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var user = ss.getSheetByName(USERS_SHEET);
+  if (!user) {
+    user = ss.insertSheet(USERS_SHEET);
+    user.appendRow(['nickname', 'pin', 'stamp1', 'stamp2', 'stamp3', 'updated']);
+  }
+  var codes = ss.getSheetByName(CODES_SHEET);
+  if (!codes) {
+    codes = ss.insertSheet(CODES_SHEET);
+    codes.appendRow(['spotId', 'name', 'code', 'stampURL']);
+    codes.appendRow(['spot1', 'スポット1', '1234', 'https://i.imgur.com/bvgNF9A.png']);
+    codes.appendRow(['spot2', 'スポット2', '5678', 'https://i.imgur.com/Za5d3PQ.png']);
+    codes.appendRow(['spot3', 'スポット3', '9999', 'https://i.imgur.com/MSjf7Sr.png']);
+  }
+  return { user: user, codes: codes };
+}
 
 function json(data) {
   return ContentService.createTextOutput(JSON.stringify(data))
     .setMimeType(ContentService.MimeType.JSON);
 }
 
-function getSheet() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = ss.getSheetByName(SHEET_NAME);
-  if (!sheet) {
-    sheet = ss.insertSheet(SHEET_NAME);
-  sheet.appendRow(['nickname', 'pin', 'stamp1', 'stamp2', 'stamp3', 'memo', '最終更新']);
-  }
-  return sheet;
+function getUserSheet() {
+  return initSheets().user;
 }
 
 function getSpots() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = ss.getSheetByName(CODE_SHEET);
-  if (!sheet) {
-    sheet = ss.insertSheet(CODE_SHEET);
-    sheet.appendRow(['spotId', 'name', 'code', 'stampURL']);
-    sheet.appendRow(['spot1', 'スポット1', '1234', 'https://i.imgur.com/bvgNF9A.png']);
-    sheet.appendRow(['spot2', 'スポット2', '5678', 'https://i.imgur.com/Za5d3PQ.png']);
-    sheet.appendRow(['spot3', 'スポット3', '9999', 'https://i.imgur.com/MSjf7Sr.png']);
-  }
-  var vals = sheet.getRange(2,1,sheet.getLastRow()-1,4).getValues();
+  var sheet = initSheets().codes;
+  var vals = sheet.getRange(2, 1, sheet.getLastRow() - 1, 4).getValues();
   return vals.map(function(r) {
     return { spotId: r[0], name: r[1], code: r[2], stampURL: r[3] };
   });
@@ -37,6 +41,7 @@ function getSpotsJson() {
 }
 
 function doGet(e) {
+  initSheets();
   var file = e.parameter.file;
   if (file === 'style.css') {
     return ContentService.createTextOutput(
@@ -55,6 +60,7 @@ function doGet(e) {
 }
 
 function doPost(e) {
+  initSheets();
   var data = JSON.parse(e.postData.contents);
   switch (data.mode) {
     case 'login':
@@ -69,19 +75,19 @@ function doPost(e) {
 }
 
 function handleRegister(d) {
-  var sheet = getSheet();
+  var sheet = getUserSheet();
   var rows = sheet.getDataRange().getValues();
   for (var i = 1; i < rows.length; i++) {
     if (rows[i][0] === d.nickname) {
       return json({error:'nickname_taken'});
     }
   }
-  sheet.appendRow([d.nickname, d.pin, '', '', '', '', new Date()]);
+  sheet.appendRow([d.nickname, d.pin, '', '', '', new Date()]);
   return json({nickname:d.nickname, spot1:false, spot2:false, spot3:false});
 }
 
 function handleLogin(d) {
-  var sheet = getSheet();
+  var sheet = getUserSheet();
   var rows = sheet.getDataRange().getValues();
   for (var i = 1; i < rows.length; i++) {
     if (rows[i][0] === d.nickname && rows[i][1] === d.pin) {
@@ -89,8 +95,7 @@ function handleLogin(d) {
         nickname: rows[i][0],
         spot1: !!rows[i][2],
         spot2: !!rows[i][3],
-        spot3: !!rows[i][4],
-        memo: rows[i][5] || ''
+        spot3: !!rows[i][4]
       });
     }
   }
@@ -98,7 +103,7 @@ function handleLogin(d) {
 }
 
 function handleStamp(d) {
-  var sheet = getSheet();
+  var sheet = getUserSheet();
   var rows = sheet.getDataRange().getValues();
   var spots = getSpots();
   var spot = null;
@@ -118,7 +123,7 @@ function handleStamp(d) {
         return json({error:'already'});
       }
       sheet.getRange(i+1, col).setValue(new Date());
-      sheet.getRange(i+1, 7).setValue(new Date());
+      sheet.getRange(i+1, 6).setValue(new Date());
       var updated = sheet.getRange(i+1, 3, 1, 3).getValues()[0];
       var complete = updated.every(String);
       return json({complete: complete});
