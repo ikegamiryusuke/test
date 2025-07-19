@@ -131,7 +131,8 @@ function createConfetti(container, count) {
     const size = Math.random() * 8 + 6;
     p.style.width = size + 'px';
     p.style.height = size * 0.4 + 'px';
-    p.style.background = `hsl(${Math.random()*360},80%,50%)`;
+    const hue = 45 + Math.random() * 10; // golden range
+    p.style.background = `hsl(${hue},80%,50%)`;
     p.style.left = Math.random() * 100 + '%';
     p.style.animationDuration = Math.random() * 1.5 + 1 + 's';
     container.appendChild(p);
