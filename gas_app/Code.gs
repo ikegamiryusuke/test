@@ -23,7 +23,7 @@ function getOrCreateSheet() {
 }
 
 function doGet(e) {
-  return HtmlService.createHtmlOutputFromFile('index');
+  return HtmlService.createHtmlOutputFromFile('index.html');
 }
 
 function processLogin(form) {
