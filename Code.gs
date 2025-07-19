@@ -22,9 +22,9 @@ function getSpots() {
   if (!sheet) {
     sheet = ss.insertSheet(CODE_SHEET);
     sheet.appendRow(['spotId', 'name', 'code', 'stampURL']);
-    sheet.appendRow(['spot1', 'スポット1', 'CODE1', 'https://via.placeholder.com/80?text=1']);
-    sheet.appendRow(['spot2', 'スポット2', 'CODE2', 'https://via.placeholder.com/80?text=2']);
-    sheet.appendRow(['spot3', 'スポット3', 'CODE3', 'https://via.placeholder.com/80?text=3']);
+    sheet.appendRow(['spot1', 'スポット1', '1234', 'https://via.placeholder.com/80?text=1']);
+    sheet.appendRow(['spot2', 'スポット2', '5678', 'https://via.placeholder.com/80?text=2']);
+    sheet.appendRow(['spot3', 'スポット3', '9999', 'https://via.placeholder.com/80?text=3']);
   }
   const vals = sheet.getRange(2,1,sheet.getLastRow()-1,4).getValues();
   return vals.map(r => ({ spotId:r[0], name:r[1], code:r[2], stampURL:r[3] }));
