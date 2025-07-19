@@ -11,7 +11,7 @@ function getSheet() {
   let sheet = ss.getSheetByName(SHEET_NAME);
   if (!sheet) {
     sheet = ss.insertSheet(SHEET_NAME);
-    sheet.appendRow(['nickname', 'pin', 'stamp1', 'stamp2', 'stamp3']);
+    sheet.appendRow(['nickname', 'pin', 'stamp1', 'stamp2', 'stamp3', 'memo', '最終更新']);
   }
   return sheet;
 }
@@ -74,7 +74,7 @@ function handleRegister(d) {
       return json({error:'nickname_taken'});
     }
   }
-  sheet.appendRow([d.nickname, d.pin, '', '', '']);
+  sheet.appendRow([d.nickname, d.pin, '', '', '', '', new Date()]);
   return json({nickname:d.nickname, spot1:false, spot2:false, spot3:false});
 }
 
@@ -87,7 +87,8 @@ function handleLogin(d) {
         nickname: rows[i][0],
         spot1: !!rows[i][2],
         spot2: !!rows[i][3],
-        spot3: !!rows[i][4]
+        spot3: !!rows[i][4],
+        memo: rows[i][5] || ''
       });
     }
   }
@@ -99,7 +100,7 @@ function handleStamp(d) {
   const rows = sheet.getDataRange().getValues();
   const spots = getSpots();
   const spot = spots.find(s => s.spotId === d.spotId);
-  if (!spot || spot.code !== d.code) {
+  if (!spot || spot.code !== d.code.replace(/\D/g,'')) {
     return json({error:'invalid_code'});
   }
   for (let i = 1; i < rows.length; i++) {
@@ -109,6 +110,7 @@ function handleStamp(d) {
         return json({error:'already'});
       }
       sheet.getRange(i+1, col).setValue(new Date());
+      sheet.getRange(i+1, 7).setValue(new Date());
       const updated = sheet.getRange(i+1, 3, 1, 3).getValues()[0];
       const complete = updated.every(String);
       return json({complete: complete});
