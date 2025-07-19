@@ -19,9 +19,9 @@ const backBtn = $('back-mode');
 const authBtn = $('btn-auth');
 
 const nickInput = $('nick');
-const pinInput = $('pin');
+const birthInput = $('birth');
 const errNick = $('err-nick');
-const errPin = $('err-pin');
+const errBirth = $('err-birth');
 const authMsg = $('auth-msg');
 
 const dialArea = $('dial-area');
@@ -37,7 +37,7 @@ const stampImg = qs('#stampEffect .stamp');
 const WEBAPP_URL = window.WEBAPP_URL;
 const SPOTS = JSON.parse($('spot-data').textContent); // [{spotId,name,code,stampURL},...]
 
-let curUser = null; // {nickname,pin}
+let curUser = null; // {nickname,birth}
 let stamped = { spot1: false, spot2: false, spot3: false }; // {spot1:true,...}
 let dialNodes = []; // 4桁ダイヤルDOM要素配列
 
@@ -79,21 +79,21 @@ async function postJSON(body) {
 // 5. 認証画面 -----------------------------------------------------
 function clearAuth() {
   nickInput.value = '';
-  pinInput.value = '';
-  errNick.textContent = errPin.textContent = authMsg.textContent = '';
+  birthInput.value = '';
+  errNick.textContent = errBirth.textContent = authMsg.textContent = '';
 }
 
 async function submitAuth(mode) {
   const nick = nickInput.value.trim();
-  const pin = pinInput.value.trim();
+  const birth = birthInput.value.trim();
   if (!nick) { errNick.textContent = '必須'; return; }
-  if (!/^\d{4}$/.test(pin)) { errPin.textContent = '4桁数字'; return; } // 正規表現を修正
-  errNick.textContent = errPin.textContent = ''; // エラーメッセージをクリア
+  if (!/^(?:0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])$/.test(birth)) { errBirth.textContent = 'MMDD形式'; return; }
+  errNick.textContent = errBirth.textContent = ''; // エラーメッセージをクリア
 
-  const res = await postJSON({ mode, nickname: nick, pin });
+  const res = await postJSON({ mode, nickname: nick, birth });
   if (res.error) { showError(res.error, authMsg); return; }
 
-  curUser = { nickname: res.nickname, pin };
+  curUser = { nickname: res.nickname, birth };
   stamped = { spot1: !!res.spot1, spot2: !!res.spot2, spot3: !!res.spot3 };
   setupMain();
   goto(scrMain);
@@ -175,7 +175,7 @@ async function checkCode() {
       const res = await postJSON({
         mode: 'stamp',
         nickname: curUser.nickname,
-        pin: curUser.pin,
+        birth: curUser.birth,
         spotId: s.spotId,
         code // サーバー側での二重チェック用
       });

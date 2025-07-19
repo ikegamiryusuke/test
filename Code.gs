@@ -11,7 +11,7 @@ function getSheet() {
   let sheet = ss.getSheetByName(SHEET_NAME);
   if (!sheet) {
     sheet = ss.insertSheet(SHEET_NAME);
-    sheet.appendRow(['nickname', 'pin', 'stamp1', 'stamp2', 'stamp3', 'memo', '最終更新']);
+    sheet.appendRow(['nickname', 'birth', 'stamp1', 'stamp2', 'stamp3', 'memo', '最終更新']);
   }
   return sheet;
 }
@@ -74,7 +74,7 @@ function handleRegister(d) {
       return json({error:'nickname_taken'});
     }
   }
-  sheet.appendRow([d.nickname, d.pin, '', '', '', '', new Date()]);
+  sheet.appendRow([d.nickname, d.birth, '', '', '', '', new Date()]);
   return json({nickname:d.nickname, spot1:false, spot2:false, spot3:false});
 }
 
@@ -82,7 +82,7 @@ function handleLogin(d) {
   const sheet = getSheet();
   const rows = sheet.getDataRange().getValues();
   for (let i = 1; i < rows.length; i++) {
-    if (rows[i][0] === d.nickname && rows[i][1] === d.pin) {
+    if (rows[i][0] === d.nickname && rows[i][1] === d.birth) {
       return json({
         nickname: rows[i][0],
         spot1: !!rows[i][2],
@@ -104,7 +104,7 @@ function handleStamp(d) {
     return json({error:'invalid_code'});
   }
   for (let i = 1; i < rows.length; i++) {
-    if (rows[i][0] === d.nickname && rows[i][1] === d.pin) {
+    if (rows[i][0] === d.nickname && rows[i][1] === d.birth) {
       const col = d.spotId === 'spot1' ? 3 : d.spotId === 'spot2' ? 4 : 5;
       if (rows[i][col-1]) {
         return json({error:'already'});
