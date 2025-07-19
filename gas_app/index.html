@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <meta charset="UTF-8">
+    <title>冒険の書スタンプラリー</title>
+    <style>
+      .hidden { display: none; }
+      .stamp-container {
+        display: flex;
+        gap: 10px;
+        margin: 10px 0;
+      }
+      .stamp-slot {
+        width: 60px;
+        height: 60px;
+        line-height: 60px;
+        text-align: center;
+        border: 1px solid #ccc;
+        font-size: 30px;
+      }
+      .dial {
+        display: flex;
+        gap: 5px;
+        margin: 10px 0;
+      }
+      .digit {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-size: 20px;
+      }
+      .digit .num {
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        border: 1px solid #ccc;
+        margin: 2px 0;
+        font-size: 24px;
+        background: #fff;
+      }
+      .digit div { cursor: pointer; user-select: none; }
+      .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.6);
+        color: #fff;
+        font-size: 40px;
+        z-index: 100;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 id="main-title">冒険の書スタンプラリー</h1>
+
+    <div id="loginSection">
+      <form id="loginForm">
+        <label>冒険者名: <input type="text" name="nickname" required></label><br>
+        <label>誕生日4桁: <input type="text" name="birthday" pattern="\\d{4}" required></label><br>
+        <input type="button" value="ログイン/登録" onclick="submitForm()">
+      </form>
+    </div>
+
+    <div id="appSection" class="hidden">
+      <div id="slots" class="stamp-container">
+        <div id="slot-spot1" class="stamp-slot"></div>
+        <div id="slot-spot2" class="stamp-slot"></div>
+        <div id="slot-spot3" class="stamp-slot"></div>
+      </div>
+
+      <div id="dial" class="dial">
+        <div class="digit" data-idx="0"><div class="up">▲</div><div class="num">0</div><div class="down">▼</div></div>
+        <div class="digit" data-idx="1"><div class="up">▲</div><div class="num">0</div><div class="down">▼</div></div>
+        <div class="digit" data-idx="2"><div class="up">▲</div><div class="num">0</div><div class="down">▼</div></div>
+        <div class="digit" data-idx="3"><div class="up">▲</div><div class="num">0</div><div class="down">▼</div></div>
+      </div>
+      <button id="sendDial" type="button" onclick="submitDialCode()">送信</button>
+      <div id="complete" style="font-weight:bold;"></div>
+      <div id="stampEffect" class="overlay hidden">STAMP!</div>
+      <div id="complete-overlay" class="overlay hidden"><div class="complete-text">COMPLETE!!</div></div>
+    </div>
+
+    <script>
+      const spots = [
+        { id: 'spot1', img: 'https://i.imgur.com/bvgNF9A.png' },
+        { id: 'spot2', img: 'https://i.imgur.com/Za5d3PQ.png' },
+        { id: 'spot3', img: 'https://i.imgur.com/MSjf7Sr.png' }
+      ];
+
+      let userInfo = null;
+      let digits = [0, 0, 0, 0];
+      let currentProgress = '';
+
+      const updateView = (progress, complete) => {
+        currentProgress = progress;
+        const slots = document.querySelectorAll('.stamp-slot');
+        for (let i = 0; i < slots.length; i++) {
+          if (progress[i] === '1') {
+            slots[i].innerHTML = `<img src="${spots[i].img}" width="60" height="60">`;
+          } else {
+            slots[i].innerHTML = '';
+          }
+        }
+        document.getElementById('complete').textContent = complete ? '大冒険達成!!' : '';
+        document.getElementById('complete-overlay').classList.toggle('hidden', !complete);
+      };
+
+      const changeDigit = (idx, delta) => {
+        digits[idx] = (digits[idx] + delta + 10) % 10;
+        document.querySelectorAll('.digit')[idx].querySelector('.num').textContent = digits[idx];
+      };
+
+      document.querySelectorAll('.digit').forEach(d => {
+        const idx = parseInt(d.dataset.idx, 10);
+        d.querySelector('.up').addEventListener('click', () => changeDigit(idx, 1));
+        d.querySelector('.down').addEventListener('click', () => changeDigit(idx, -1));
+      });
+
+      const submitForm = () => {
+        const form = document.getElementById('loginForm');
+        const data = Object.fromEntries(new FormData(form));
+        google.script.run.withSuccessHandler(res => {
+          if (res.status === 'error') {
+            alert(res.message);
+            return;
+          }
+          userInfo = { nickname: data.nickname, birthday: data.birthday };
+          document.getElementById('loginSection').style.display = 'none';
+          document.getElementById('appSection').style.display = 'block';
+          updateView(res.progress, res.progress.indexOf('0') === -1);
+        }).processLogin(data);
+      };
+
+      const submitDialCode = () => {
+        if (!userInfo) return;
+        const code = digits.join('');
+        const payload = { nickname: userInfo.nickname, birthday: userInfo.birthday, code };
+        google.script.run.withSuccessHandler(res => {
+          if (res.error) {
+            alert(res.error);
+            return;
+          }
+          if (res.progress !== currentProgress) {
+            const eff = document.getElementById('stampEffect');
+            eff.classList.remove('hidden');
+            setTimeout(() => eff.classList.add('hidden'), 1200);
+          }
+          updateView(res.progress, res.complete);
+        }).submitCode(payload);
+      };
+    </script>
+  </body>
+</html>
