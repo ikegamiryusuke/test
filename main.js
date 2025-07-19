@@ -9,7 +9,7 @@ const show = el => el.classList.remove('hidden');
 const hide = el => el.classList.add('hidden');
 
 // 2. 画面要素 (DOM キャッシュ) --------------------------------------
-const scrMode = $('mode-screen');
+const scrStart = $('start-screen');
 const scrAuth = $('auth-screen');
 const scrMain = $('main-screen');
 
@@ -102,7 +102,7 @@ async function submitAuth(mode) {
 // イベントリスナーの登録 (DOMキャッシュ変数を使用)
 chooseLogin.onclick = () => { clearAuth(); $('auth-title').textContent = 'ログイン'; goto(scrAuth); };
 chooseRegister.onclick = () => { clearAuth(); $('auth-title').textContent = '新規登録'; goto(scrAuth); };
-backBtn.onclick = () => { goto(scrMode); };
+backBtn.onclick = () => { goto(scrStart); };
 authBtn.onclick = () => submitAuth($('auth-title').textContent === '新規登録' ? 'register' : 'login');
 
 // 6. メイン画面 ----------------------------------------------------
@@ -198,13 +198,13 @@ function showComplete() {
 
 // 7. 画面遷移ロジック ----------------------------------------------
 function goto(screen) {
-  [scrMode, scrAuth, scrMain].forEach(hide); // 全ての画面を非表示に
+  [scrStart, scrAuth, scrMain].forEach(hide); // 全ての画面を非表示に
   show(screen); // 指定された画面を表示
 }
 
 // 8. アプリ起動時の処理 --------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
-  goto(scrMode); // アプリ起動時は常にモード選択画面から開始
+  goto(scrStart); // アプリ起動時は常に選択画面から開始
 });
 
 // ======================== end main.js ============================
