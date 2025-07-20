@@ -11,7 +11,7 @@ const STAMPS = [
 const NUM_STAMPS = STAMPS.length;
 
 // 背景パターンも定数で定義してテンプレートへ渡す
-const BACKGROUND = 'repeating-linear-gradient(45deg, #fafafa 0, #fafafa 20px, #f0f0f0 20px, #f0f0f0 40px)';
+const BACKGROUND = 'linear-gradient(#fdf7e8, #e8ddb9)';
 
 /**
  * Fetch the data sheet, creating it if necessary.

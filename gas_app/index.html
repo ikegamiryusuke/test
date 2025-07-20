@@ -7,13 +7,16 @@
     <style><?!= include('style'); ?></style>
   </head>
   <body>
-    <h1 id="main-title">スタンプラリー</h1>
+    <div id="startSection" class="screen parchment">
+      <button id="btnShowLogin" class="wax-btn">ログイン</button>
+      <button id="btnShowRegister" class="wax-btn">新規登録</button>
+    </div>
 
-    <div id="loginSection">
+    <div id="loginSection" class="screen parchment hidden">
       <form id="loginForm">
         <label>冒険者名: <input type="text" name="nickname" required></label><br>
         <label>誕生日4桁: <input type="text" name="birthday" pattern="\\d{4}" required></label><br>
-        <input type="button" value="ログイン/登録" onclick="submitForm()">
+        <input id="submitLogin" type="button" value="ログイン" onclick="submitForm()">
       </form>
     </div>
 

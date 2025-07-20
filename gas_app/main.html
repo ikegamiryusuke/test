@@ -10,6 +10,16 @@
       let userInfo = null;
       let digits = [0, 0, 0, 0];
       let currentProgress = '';
+      document.getElementById('btnShowLogin').addEventListener('click', () => {
+        document.getElementById('startSection').classList.add('hidden');
+        document.getElementById('loginSection').classList.remove('hidden');
+        document.getElementById('submitLogin').value = 'ログイン';
+      });
+      document.getElementById('btnShowRegister').addEventListener('click', () => {
+        document.getElementById('startSection').classList.add('hidden');
+        document.getElementById('loginSection').classList.remove('hidden');
+        document.getElementById('submitLogin').value = '新規登録';
+      });
 
       const updateView = (progress, complete) => {
         currentProgress = progress;
@@ -52,8 +62,8 @@
             return;
           }
           userInfo = { nickname: data.nickname, birthday: data.birthday, row: res.row };
-          document.getElementById('loginSection').style.display = 'none';
-          document.getElementById('appSection').style.display = 'block';
+          document.getElementById('loginSection').classList.add('hidden');
+          document.getElementById('appSection').classList.remove('hidden');
           updateView(res.progress, res.progress.indexOf('0') === -1);
         }).processLogin(data);
       };
