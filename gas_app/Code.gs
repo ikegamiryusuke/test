@@ -32,6 +32,7 @@ function doGet(e) {
   var tpl = HtmlService.createTemplateFromFile('index.html');
   tpl.spotsJson = getSpotsJson();
   tpl.background = BACKGROUND;
+  tpl.webAppUrl = ScriptApp.getService().getUrl();
   return tpl.evaluate();
 }
 
@@ -104,4 +105,8 @@ function submitCode(form) {
     sheet.getRange(row, 3).setValue(progress);
   }
   return {progress: progress, complete: progress.indexOf('0') === -1, row: row};
+}
+
+function include(name) {
+  return HtmlService.createHtmlOutputFromFile(name).getContent();
 }

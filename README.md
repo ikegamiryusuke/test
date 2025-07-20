@@ -11,8 +11,9 @@ The `gas_app` directory provides a minimal example of a GAS web application that
 1. Create a Google Spreadsheet and note its ID (the string after `/d/` in the URL).
 2. Copy the files in `gas_app` into a new Apps Script project.
 3. The script currently uses the spreadsheet ID `19vdwSjc_4zYtBo5XNZVhT_QylE8Qm4EZhJP07DUe7YQ`. Change the `SPREADSHEET_ID` constant in `gas_app/Code.gs` if you want to use a different sheet.
-4. Deploy the script as a web app with access to the spreadsheet.
-5. Users can visit the web app URL and log in with their nickname and four-digit birthday. If the account exists, their progress is shown and they can submit stamp codes. Otherwise a new entry is created.
+4. `index.html` loads `style.html` and `main.html` through the `include()` helper defined in `Code.gs`.
+5. Deploy the script as a web app with access to the spreadsheet.
+6. Users can visit the web app URL and log in with their nickname and four-digit birthday. If the account exists, their progress is shown and they can submit stamp codes. Otherwise a new entry is created.
    If another user already registered the same nickname, registration will fail.
 
 スタンプは3種類で、デフォルトのコードは `1234`、`5678`、`9999` です。画像 URL も `gas_app/Code.gs` の `STAMPS` 配列で設定できます。

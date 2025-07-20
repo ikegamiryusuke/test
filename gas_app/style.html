@@ -1,0 +1,93 @@
+      .hidden { display: none; }
+      body {
+        font-family: sans-serif;
+        background: <?= background ?>;
+      }
+      .stamp-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        margin: 20px auto;
+        max-width: 320px;
+      }
+      .stamp-slot {
+        width: 70px;
+        height: 70px;
+        line-height: 70px;
+        text-align: center;
+        border: 2px dashed #964b00;
+        background: #fff;
+        font-size: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.3s;
+      }
+      .stamp-slot.filled {
+        transform: scale(1.1);
+      }
+      .stamp-slot.empty::after {
+        content: "?";
+        color: #ccc;
+        font-size: 24px;
+      }
+      .dial {
+        display: flex;
+        gap: 5px;
+        margin: 10px 0;
+      }
+      .digit {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-size: 20px;
+      }
+      .digit .num {
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        border: 1px solid #ccc;
+        margin: 2px 0;
+        font-size: 24px;
+        background: #fff;
+      }
+      .digit div { cursor: pointer; user-select: none; }
+      .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.6);
+        color: #fff;
+        font-size: 40px;
+        z-index: 100;
+      }
+      @keyframes pop {
+        0% { transform: scale(0); opacity: 0; }
+        50% { transform: scale(1.2); opacity: 1; }
+        100% { transform: scale(1); opacity: 0; }
+      }
+      .stamp-text {
+        animation: pop 1s forwards;
+      }
+      #stampConfetti {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        background-image: radial-gradient(#ffd700 2px, transparent 2px), radial-gradient(#ff69b4 2px, transparent 2px), radial-gradient(#87cefa 2px, transparent 2px);
+        background-size: 10px 10px;
+        animation: pop 1s forwards;
+      }
+      @keyframes spin {
+        from { transform: rotateX(0deg); }
+        to { transform: rotateX(360deg); }
+      }
+      .spin .num {
+        animation: spin 0.3s;
+      }
