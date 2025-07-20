@@ -40,7 +40,7 @@ function processLogin(form) {
     var rowBirth = data[i][1];
     if (rowNick === nickname) {
       if (rowBirth === birthday) {
-        var progress = (data[i][2] || '').toString().padEnd(NUM_STAMPS, '0');
+        var progress = ('' + (data[i][2] || '')).padEnd(NUM_STAMPS, '0').substring(0, NUM_STAMPS);
         return {status: 'login', progress: progress};
       }
       return {status: 'error', message: 'Nickname already taken'};
@@ -64,7 +64,7 @@ function submitCode(form) {
   var data = sheet.getDataRange().getValues();
   for (var i = 1; i < data.length; i++) {
     if (data[i][0] === nickname && data[i][1] === birthday) {
-      var progress = (data[i][2] || '').toString().padEnd(NUM_STAMPS, '0');
+      var progress = ('' + (data[i][2] || '')).padEnd(NUM_STAMPS, '0').substring(0, NUM_STAMPS);
       var idx = STAMP_CODES.indexOf(code);
       if (idx >= 0 && progress[idx] === '0') {
         progress = progress.substring(0, idx) + '1' + progress.substring(idx + 1);
