@@ -1,0 +1,95 @@
+      const spots = JSON.parse(document.getElementById('spot-data').textContent);
+      const slotContainer = document.getElementById('slots');
+      spots.forEach(s => {
+        const div = document.createElement('div');
+        div.id = 'slot-' + s.id;
+        div.className = 'stamp-slot empty';
+        slotContainer.appendChild(div);
+      });
+
+      let userInfo = null;
+      let digits = [0, 0, 0, 0];
+      let currentProgress = '';
+      const showSection = (id) => {
+        document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+        document.getElementById(id).classList.remove('hidden');
+      };
+      document.getElementById('btnShowLogin').addEventListener('click', () => {
+        showSection('loginSection');
+        document.getElementById('submitLogin').value = 'ログイン';
+      });
+      document.getElementById('btnShowRegister').addEventListener('click', () => {
+        showSection('loginSection');
+        document.getElementById('submitLogin').value = '新規登録';
+      });
+      document.getElementById('btnBack').addEventListener('click', () => {
+        showSection('startSection');
+      });
+
+      const updateView = (progress, complete) => {
+        currentProgress = progress;
+        const slots = document.querySelectorAll('.stamp-slot');
+        for (let i = 0; i < slots.length; i++) {
+          if (progress[i] === '1') {
+            slots[i].classList.remove('empty');
+            slots[i].classList.add('filled');
+            slots[i].innerHTML = `<img src="${spots[i].img}" width="60" height="60">`;
+          } else {
+            slots[i].classList.remove('filled');
+            slots[i].classList.add('empty');
+            slots[i].innerHTML = '';
+          }
+        }
+        document.getElementById('complete').textContent = complete ? '大冒険達成!!' : '';
+        document.getElementById('complete-overlay').classList.toggle('hidden', !complete);
+      };
+
+      const changeDigit = (idx, delta) => {
+        digits[idx] = (digits[idx] + delta + 10) % 10;
+        const digit = document.querySelectorAll('.digit')[idx];
+        digit.classList.add('spin');
+        digit.querySelector('.num').textContent = digits[idx];
+        setTimeout(() => digit.classList.remove('spin'), 300);
+      };
+
+      document.querySelectorAll('.digit').forEach(d => {
+        const idx = parseInt(d.dataset.idx, 10);
+        d.querySelector('.up').addEventListener('click', () => changeDigit(idx, 1));
+        d.querySelector('.down').addEventListener('click', () => changeDigit(idx, -1));
+      });
+
+      const submitForm = () => {
+        const form = document.getElementById('loginForm');
+        const data = Object.fromEntries(new FormData(form));
+        google.script.run.withSuccessHandler(res => {
+          if (res.status === 'error') {
+            alert(res.message);
+            return;
+          }
+          userInfo = { nickname: data.nickname, birthday: data.birthday, row: res.row };
+          showSection('appSection');
+          updateView(res.progress, res.progress.indexOf('0') === -1);
+        }).processLogin(data);
+      };
+
+      const submitDialCode = () => {
+        if (!userInfo) return;
+        const code = digits.join('');
+        const payload = { nickname: userInfo.nickname, birthday: userInfo.birthday, code, row: userInfo.row };
+        google.script.run.withSuccessHandler(res => {
+          if (res.error) {
+            alert(res.error);
+            return;
+          }
+          if (res.progress !== currentProgress) {
+            const eff = document.getElementById('stampEffect');
+            eff.classList.remove('hidden');
+            setTimeout(() => eff.classList.add('hidden'), 1200);
+          }
+          userInfo.row = res.row;
+        updateView(res.progress, res.complete);
+      }).submitCode(payload);
+      };
+
+      document.getElementById('submitLogin').addEventListener('click', submitForm);
+      document.getElementById('sendDial').addEventListener('click', submitDialCode);

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <meta charset="UTF-8">
+    <title>スタンプラリー</title>
+    <style><?!= include('style'); ?></style>
+  </head>
+  <body>
+    <div id="startSection" class="screen parchment">
+      <button id="btnShowLogin" class="wax-btn login-btn" aria-label="ログイン"></button>
+      <button id="btnShowRegister" class="wax-btn register-btn" aria-label="新規登録"></button>
+    </div>
+
+    <div id="loginSection" class="screen parchment hidden">
+      <button id="btnBack" class="back-btn">← 戻る</button>
+      <form id="loginForm">
+        <label>冒険者名: <input type="text" name="nickname" required></label><br>
+        <label>誕生日4桁: <input type="text" name="birthday" pattern="\\d{4}" required></label><br>
+        <input id="submitLogin" type="button" value="ログイン">
+      </form>
+    </div>
+
+    <div id="appSection" class="screen parchment hidden">
+      <div id="slots" class="stamp-container"></div>
+
+      <div id="dial" class="dial">
+        <div class="digit" data-idx="0"><div class="up">▲</div><div class="num">0</div><div class="down">▼</div></div>
+        <div class="digit" data-idx="1"><div class="up">▲</div><div class="num">0</div><div class="down">▼</div></div>
+        <div class="digit" data-idx="2"><div class="up">▲</div><div class="num">0</div><div class="down">▼</div></div>
+        <div class="digit" data-idx="3"><div class="up">▲</div><div class="num">0</div><div class="down">▼</div></div>
+      </div>
+      <button id="sendDial" type="button">送信</button>
+      <div id="complete" style="font-weight:bold;"></div>
+      <div id="stampEffect" class="overlay hidden"><div class="stamp-text">STAMP!</div><div id="stampConfetti"></div></div>
+      <div id="complete-overlay" class="overlay hidden"><div class="complete-text">COMPLETE!!</div></div>
+    </div>
+
+    <script id="spot-data" type="application/json">
+      <?= spotsJson ?>
+    </script>
+
+    <script><?!= include('main'); ?></script>
+  </body>
+</html>
