@@ -83,6 +83,9 @@
             setTimeout(() => eff.classList.add('hidden'), 1200);
           }
           userInfo.row = res.row;
-          updateView(res.progress, res.complete);
-        }).submitCode(payload);
+        updateView(res.progress, res.complete);
+      }).submitCode(payload);
       };
+
+      document.getElementById('submitLogin').addEventListener('click', submitForm);
+      document.getElementById('sendDial').addEventListener('click', submitDialCode);
