@@ -4,7 +4,7 @@ This repository contains a simple Google Apps Script (GAS) web app.
 
 ## gas_app
 
-The `gas_app` directory provides a minimal example of a GAS web application that stores user progress in a Google Spreadsheet. It implements a small digital stamp rally: users register with a nickname and four-digit birthday, then collect stamps by entering secret codes at each location. When all stamps are gathered, the app displays **"COMPLETE!!"**. Duplicate nicknames are not allowed — a nickname can only be registered once. The first screen simply shows two sealing-wax style buttons for login and registration over a parchment background.
+The `gas_app` directory provides a minimal example of a GAS web application that stores user progress in a Google Spreadsheet. It implements a small digital stamp rally: users register with a nickname and four-digit birthday, then collect stamps by entering secret codes at each location. When all stamps are gathered, the app displays **"COMPLETE!!"**. Duplicate nicknames are not allowed — a nickname can only be registered once. The first screen shows two wax-seal images for login and registration over a parchment background.
 
 ### Usage
 
