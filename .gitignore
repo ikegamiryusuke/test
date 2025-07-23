@@ -1,12 +1,9 @@
-__pycache__/
-*.py[cod]
-*.egg-info/
-*.egg
-.env/
-.venv/
-venv/
-ENV/
-build/
-dist/
-.pytest_cache/
+# Ignore clasp configuration and node modules
+.clasp.json
+node_modules/
 
+# Ignore VS Code settings
+.vscode/
+
+# Ignore Logs
+*.log
