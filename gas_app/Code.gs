@@ -34,7 +34,8 @@ function setRowCache(name, row) {
 }
 
 function doGet() {
-  const tpl = HtmlService.createTemplateFromFile('index.html');
+  // Apps Script では拡張子を付けずにファイル名を指定する
+  const tpl = HtmlService.createTemplateFromFile('index');
   tpl.spotsJson = getSpotsJson();
   tpl.background = BACKGROUND;
   tpl.stampBg = STAMP_BACKGROUND;
