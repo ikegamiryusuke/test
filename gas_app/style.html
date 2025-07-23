@@ -1,0 +1,151 @@
+      .hidden { display: none; }
+      body {
+        font-family: sans-serif;
+        background: <?= background ?>;
+      }
+      .screen {
+        text-align: center;
+        padding: 40px 0;
+      }
+      .parchment {
+        max-width: 400px;
+        margin: 0 auto;
+        background: rgba(255,255,240,0.8);
+        border: 2px solid #d0c090;
+        box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      }
+
+      #main-screen {
+        background: <?= stampBg ?>;
+      }
+      .wax-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin: 10px;
+        width: 120px;
+        height: 120px;
+        border-radius: 60px;
+        border: none;
+        color: #fff;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+      .login-btn { background: #d9534f; }
+      .register-btn { background: #5bc0de; }
+      .back-btn {
+        border: none;
+        background: none;
+        color: #333;
+        font-size: 14px;
+        cursor: pointer;
+        margin-bottom: 10px;
+      }
+      .action-btn {
+        display: inline-block;
+        padding: 6px 12px;
+        margin: 10px;
+        font-size: 16px;
+        border: 1px solid #666;
+        background: #eee;
+        cursor: pointer;
+      }
+      .stamp-container {
+        position: relative;
+        width: 220px;
+        height: 200px;
+        margin: 20px auto;
+      }
+      .stamp-slot {
+        position: absolute;
+        width: 70px;
+        height: 70px;
+        line-height: 70px;
+        text-align: center;
+        border: 2px dashed #964b00;
+        background: #fff;
+        font-size: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.3s;
+      }
+      #slot-spot1 { top: 0; left: 50%; transform: translate(-50%, 0); }
+      #slot-spot2 { bottom: 0; left: 0; }
+      #slot-spot3 { bottom: 0; right: 0; }
+      .stamp-slot.filled {
+        transform: scale(1.1);
+      }
+      .stamp-slot.empty::after {
+        content: "?";
+        color: #ccc;
+        font-size: 24px;
+      }
+      .dial-area {
+        display: flex;
+        gap: 5px;
+        margin: 10px 0;
+      }
+      .digit {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-size: 20px;
+      }
+      .digit .num {
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        border: 1px solid #ccc;
+        margin: 2px 0;
+        font-size: 24px;
+        background: #fff;
+      }
+      .digit div { cursor: pointer; user-select: none; }
+      .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.6);
+        color: #fff;
+        font-size: 40px;
+        z-index: 100;
+      }
+      .spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid #fff;
+        border-top-color: transparent;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes pop {
+        0% { transform: scale(0); opacity: 0; }
+        50% { transform: scale(1.2); opacity: 1; }
+        100% { transform: scale(1); opacity: 0; }
+      }
+      .stamp-text {
+        animation: pop 1s forwards;
+      }
+      #stampConfetti {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        background-image: radial-gradient(#ffd700 2px, transparent 2px), radial-gradient(#ff69b4 2px, transparent 2px), radial-gradient(#87cefa 2px, transparent 2px);
+        background-size: 10px 10px;
+        animation: pop 1s forwards;
+      }
+      @keyframes spin {
+        from { transform: rotateX(0deg); }
+        to { transform: rotateX(360deg); }
+      }
+      .spin .num {
+        animation: spin 0.3s;
+      }
