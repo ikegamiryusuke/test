@@ -14,7 +14,8 @@ The `gas_app` directory provides a minimal example of a GAS web application that
 4. `index.html` loads `style.html` and `main.html` through the `include()` helper defined in `Code.gs`.
 5. Deploy the script as a web app with access to the spreadsheet.
 6. Users can visit the web app URL and log in with their nickname and four-digit birthday. If the account exists, their progress is shown and they can submit stamp codes. Otherwise a new entry is created.
-   If another user already registered the same nickname, registration will fail.
+7. ログインすると、スプレッドシートに保存された進捗が自動的に読み込まれます。
+8. If another user already registered the same nickname, registration will fail.
 
 スタンプは3種類で、デフォルトのコードは `1234`、`5678`、`9999` です。画像 URL も `gas_app/Code.gs` の `STAMPS` 配列で設定できます。
 背景パターンは `BACKGROUND` 定数で指定しています。
