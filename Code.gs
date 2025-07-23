@@ -71,6 +71,22 @@ function doPost(e) {
       throw new Error('ただいま大変混み合っています。しばらくしてからお試しください。');
     }
 
+    if (!e || !e.postData || !e.postData.contents) {
+      throw new Error('リクエストが不正です。');
+    }
+
+    let params;
+    try {
+      params = JSON.parse(e.postData.contents);
+    } catch (parseErr) {
+      throw new Error('リクエストの形式が正しくありません。');
+    }
+
+    const question = params.question || '';
+    if (!question) {
+      throw new Error('質問が見つかりません。');
+    }
+
     // 流量制限
     const userKey = e.forwardedFor || e.remoteAddress || 'unknown_user';
     const userCache = CacheService.getScriptCache();
@@ -92,8 +108,6 @@ function doPost(e) {
     }
 
     // メイン処理
-    const params = JSON.parse(e.postData.contents);
-    const question = params.question;
     const folderId = properties.getProperty('DRIVE_FOLDER_ID');
     const knowledge = getKnowledgeText(folderId);
     if (!knowledge) {

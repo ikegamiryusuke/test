@@ -9,14 +9,22 @@
 
 ## セットアップ
 1. 新しい Apps Script プロジェクトを作成し、`Code.gs` の内容を貼り付けます。
-2. スクリプトプロパティに以下を設定します。
+2. エディタ左側の **サービス** から **Google Drive API** を追加して有効化します。
+3. スクリプトプロパティに以下を設定します。
    - `GEMINI_API_KEY`: Gemini API キー
    - `DRIVE_FOLDER_ID`: 知識ベースを保存したフォルダの ID
-3. `Code.gs` を保存して Web アプリとしてデプロイします。
-4. Google サイト等から Web アプリの URL に対して POST リクエストを送ることで利用できます。
+4. `Code.gs` を保存して Web アプリとしてデプロイします。
+5. Google サイト等から Web アプリの URL に対して POST リクエストを送ることで利用できます。
 
 ## agent.yaml
 エージェント設定ファイルとして `agent.yaml` を用意しています。`entrypoint` は `Code.gs:doPost` を指しています。
+
+## 利用制限の調整
+`Code.gs` 冒頭で `RATE_LIMIT_SECONDS` と `DAILY_QUOTA` を定義しています。
+前者は同じユーザーが再質問できるまでの待ち時間、後者は 1 日あたりの総リクエスト
+上限を示します。無料枠内で運用したい場合は `DAILY_QUOTA` を小さめに設定すると過剰
+利用を抑えられます。用途に合わせて値を変更し、必要に応じて Google Cloud 側の
+クォータ設定と併せて管理してください。
 
 ## ライセンス
 本プロジェクトは [MIT License](LICENSE) の下で公開されています。
