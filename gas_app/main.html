@@ -132,5 +132,7 @@
         createDial();
       }
 
-      document.addEventListener('DOMContentLoaded', init);
+      // Apps Script では DOMContentLoaded が既に発火していることがあるため
+      // スクリプト読み込み後すぐに初期化を実行する
+      init();
 
