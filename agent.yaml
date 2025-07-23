@@ -1,3 +1,4 @@
 name: Asoboon Agent
 description: あそびをつくるAIエージェント
+# entrypoint は GAS デプロイを確認するためのサンプルスクリプトを実行する設定です
 entrypoint: main.py:run

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>スタンプラリー</title>
+  <style><?!= include('style') ?></style>
+</head>
+<body>
+  <h1 id="main-title">スタンプラリー</h1>
+
+  <div id="mode-screen" class="screen parchment">
+    <button id="choose-login" class="wax-btn login-btn" aria-label="ログイン"></button>
+    <button id="choose-register" class="wax-btn register-btn" aria-label="新規登録"></button>
+  </div>
+
+  <div id="auth-screen" class="screen parchment hidden">
+    <button id="back-mode" class="back-btn">← 戻る</button>
+    <form id="auth-form">
+      <div class="form-group">
+        <label>ニックネーム
+          <input id="nick" name="nickname" autocomplete="nickname" required>
+        </label>
+      </div>
+      <div class="form-group">
+        <label>誕生日4桁
+          <input id="pin" name="birthday" inputmode="numeric" pattern="\\d{4}" maxlength="4" required>
+        </label>
+      </div>
+      <span id="auth-msg" class="msg"></span>
+      <button type="button" id="btn-auth" class="action-btn auth-submit-btn">送信</button>
+    </form>
+  </div>
+
+  <div id="main-screen" class="screen parchment hidden">
+    <div id="slots" class="stamp-container"></div>
+    <div id="dial-area" class="dial-area"></div>
+    <button id="sendDial" type="button" class="action-btn">送信</button>
+    <div id="stampEffect" class="overlay hidden">
+      <div class="stamp-text">STAMP!</div>
+      <div id="stampConfetti"></div>
+    </div>
+    <div id="complete-overlay" class="overlay hidden">
+      <div class="complete-text">COMPLETE!!</div>
+    </div>
+  </div>
+
+  <div id="loading-overlay" class="overlay hidden">
+    <div class="spinner"></div>
+  </div>
+
+  <script id="spot-data" type="application/json">
+    <?!= spotsJson ?>
+  </script>
+  <script><?!= include('main') ?></script>
+</body>
+</html>
