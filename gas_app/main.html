@@ -1,0 +1,136 @@
+      var spots = JSON.parse(document.getElementById('spot-data').textContent);
+      var slotContainer = document.getElementById('slots');
+      var dialArea = document.getElementById('dial-area');
+      var userInfo = null;
+      var digits = [0,0,0,0];
+      var currentProgress = '';
+
+      function createSlots() {
+        slotContainer.innerHTML = '';
+        spots.forEach(function(s) {
+          var div = document.createElement('div');
+          div.id = 'slot-' + s.id;
+          div.className = 'stamp-slot empty';
+          slotContainer.appendChild(div);
+        });
+      }
+
+      function createDial() {
+        dialArea.innerHTML = '';
+        digits = [0,0,0,0];
+        for (var i = 0; i < 4; i++) {
+          var d = document.createElement('div');
+          d.className = 'digit';
+          d.dataset.idx = i;
+          d.innerHTML = '<div class="up">▲</div><div class="num">0</div><div class="down">▼</div>';
+          dialArea.appendChild(d);
+        }
+        document.querySelectorAll('.digit').forEach(function(d) {
+          var idx = Number(d.dataset.idx);
+          d.querySelector('.up').addEventListener('click', function() { changeDigit(idx, 1); });
+          d.querySelector('.down').addEventListener('click', function() { changeDigit(idx, -1); });
+        });
+      }
+
+      function showSection(id) {
+        document.querySelectorAll('.screen').forEach(function(s) { s.classList.add('hidden'); });
+        document.getElementById(id).classList.remove('hidden');
+        var err = document.getElementById('error-msg');
+        if (err) err.textContent = '';
+      }
+
+      function updateView(progress, complete) {
+        currentProgress = progress;
+        var slots = document.querySelectorAll('.stamp-slot');
+        for (var i = 0; i < slots.length; i++) {
+          if (progress[i] === '1') {
+            slots[i].classList.remove('empty');
+            slots[i].classList.add('filled');
+            slots[i].innerHTML = '<img src="' + spots[i].img + '" width="60" height="60">';
+          } else {
+            slots[i].classList.remove('filled');
+            slots[i].classList.add('empty');
+            slots[i].innerHTML = '';
+          }
+        }
+        document.getElementById('complete-overlay').classList.toggle('hidden', !complete);
+      }
+
+      function changeDigit(idx, delta) {
+        digits[idx] = (digits[idx] + delta + 10) % 10;
+        var digit = document.querySelectorAll('.digit')[idx];
+        digit.classList.add('spin');
+        digit.querySelector('.num').textContent = digits[idx];
+        setTimeout(function() { digit.classList.remove('spin'); }, 300);
+      }
+
+      function submitAuth() {
+        var nickname = document.getElementById('nick').value.trim();
+        var birthday = document.getElementById('pin').value.trim();
+        if (!nickname || !birthday) return;
+        document.getElementById('loading-overlay').classList.remove('hidden');
+        google.script.run
+          .withSuccessHandler(function(res) {
+            document.getElementById('loading-overlay').classList.add('hidden');
+            if (res.status === 'error') {
+              document.getElementById('auth-msg').textContent = res.message;
+              return;
+            }
+            userInfo = { nickname: nickname, birthday: birthday, row: res.row };
+            showSection('main-screen');
+            createDial();
+            updateView(res.progress, res.progress.indexOf('0') === -1);
+          })
+          .withFailureHandler(function() {
+            document.getElementById('loading-overlay').classList.add('hidden');
+            document.getElementById('auth-msg').textContent = 'エラーが発生しました';
+          })
+          .processLogin({ nickname: nickname, birthday: birthday });
+      }
+
+      function submitDial() {
+        if (!userInfo) return;
+        var code = digits.join('');
+        document.getElementById('loading-overlay').classList.remove('hidden');
+        google.script.run
+          .withSuccessHandler(function(res) {
+            document.getElementById('loading-overlay').classList.add('hidden');
+            if (res.error) {
+              document.getElementById('error-msg').textContent = res.error;
+              return;
+            }
+            if (res.progress !== currentProgress) {
+              var eff = document.getElementById('stampEffect');
+              eff.classList.remove('hidden');
+              setTimeout(function() { eff.classList.add('hidden'); }, 1200);
+            }
+            userInfo.row = res.row;
+            updateView(res.progress, res.complete);
+          })
+          .withFailureHandler(function() {
+            document.getElementById('loading-overlay').classList.add('hidden');
+            document.getElementById('error-msg').textContent = 'エラーが発生しました';
+          })
+          .submitCode({ nickname: userInfo.nickname, birthday: userInfo.birthday, code: code, row: userInfo.row });
+      }
+
+      document.getElementById('choose-login').addEventListener('click', function() {
+        showSection('auth-screen');
+      });
+      document.getElementById('choose-register').addEventListener('click', function() {
+        showSection('auth-screen');
+      });
+      document.getElementById('back-mode').addEventListener('click', function() {
+        showSection('mode-screen');
+      });
+      document.getElementById('btn-auth').addEventListener('click', submitAuth);
+      document.getElementById('sendDial').addEventListener('click', submitDial);
+
+      function init() {
+        showSection('mode-screen');
+        createSlots();
+        createDial();
+      }
+
+      document.addEventListener('DOMContentLoaded', init);
+
