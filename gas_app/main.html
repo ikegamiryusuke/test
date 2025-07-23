@@ -35,6 +35,8 @@
       function showSection(id) {
         document.querySelectorAll('.screen').forEach(function(s) { s.classList.add('hidden'); });
         document.getElementById(id).classList.remove('hidden');
+        var err = document.getElementById('error-msg');
+        if (err) err.textContent = '';
       }
 
       function updateView(progress, complete) {
@@ -94,7 +96,7 @@
           .withSuccessHandler(function(res) {
             document.getElementById('loading-overlay').classList.add('hidden');
             if (res.error) {
-              document.getElementById('auth-msg').textContent = res.error;
+              document.getElementById('error-msg').textContent = res.error;
               return;
             }
             if (res.progress !== currentProgress) {
@@ -107,7 +109,7 @@
           })
           .withFailureHandler(function() {
             document.getElementById('loading-overlay').classList.add('hidden');
-            document.getElementById('auth-msg').textContent = 'エラーが発生しました';
+            document.getElementById('error-msg').textContent = 'エラーが発生しました';
           })
           .submitCode({ nickname: userInfo.nickname, birthday: userInfo.birthday, code: code, row: userInfo.row });
       }

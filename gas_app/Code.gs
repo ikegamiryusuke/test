@@ -76,35 +76,35 @@ function processLogin(form) {
     return { status: 'error', message: '入力内容が不正です' };
   }
   const sheet = getSheet();
-  let row = getRowFromCache(nickname);
-  if (row && row >= 2 && row <= sheet.getLastRow()) {
-    const values = sheet.getRange(row, 1, 1, 3).getValues()[0];
-    if (values[0] === nickname) {
-      if (values[1] !== birthday) {
-        return { status: 'error', message: 'そのニックネームは既に使用されています' };
-      }
-      const progress = String(values[2] || '').padEnd(NUM_STAMPS, '0').substring(0, NUM_STAMPS);
-      return { status: 'login', progress: progress, row: row };
-    }
-  }
-
-  const user = findUserRow(sheet, nickname);
-  if (user) {
-    if (user.birthday !== birthday) {
-      return { status: 'error', message: 'そのニックネームは既に使用されています' };
-    }
-    setRowCache(nickname, user.row);
-    const progress = String(user.progress || '').padEnd(NUM_STAMPS, '0').substring(0, NUM_STAMPS);
-    return { status: 'login', progress: progress, row: user.row };
-  }
-
   const lock = LockService.getScriptLock();
   if (!lock.tryLock(5000)) {
     return { status: 'error', message: 'しばらくしてからお試しください' };
   }
   try {
+    let row = getRowFromCache(nickname);
+    if (row && row >= 2 && row <= sheet.getLastRow()) {
+      const values = sheet.getRange(row, 1, 1, 3).getValues()[0];
+      if (values[0] === nickname) {
+        if (values[1] !== birthday) {
+          return { status: 'error', message: 'そのニックネームは既に使用されています' };
+        }
+        const progress = String(values[2] || '').padEnd(NUM_STAMPS, '0').substring(0, NUM_STAMPS);
+        return { status: 'login', progress: progress, row: row };
+      }
+    }
+
+    const user = findUserRow(sheet, nickname);
+    if (user) {
+      if (user.birthday !== birthday) {
+        return { status: 'error', message: 'そのニックネームは既に使用されています' };
+      }
+      setRowCache(nickname, user.row);
+      const progress = String(user.progress || '').padEnd(NUM_STAMPS, '0').substring(0, NUM_STAMPS);
+      return { status: 'login', progress: progress, row: user.row };
+    }
+
     const progress = Array(NUM_STAMPS + 1).join('0');
-    const row = sheet.getLastRow() + 1;
+    row = sheet.getLastRow() + 1;
     sheet.appendRow([nickname, birthday, progress]);
     setRowCache(nickname, row);
     return { status: 'registered', progress: progress, row: row };
