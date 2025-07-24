@@ -1,4 +1,5 @@
 // Google Apps Script for the facility guide chatbot
+// 動作させるには Drive API (Advanced Service) を有効化してください
 
 const RATE_LIMIT_SECONDS = 10; // 同じユーザーの連続質問を抑制
 const DAILY_QUOTA = 500;       // 1日の利用回数上限 (無料枠に収まるよう調整)

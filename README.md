@@ -9,7 +9,7 @@
 
 ## セットアップ
 1. 新しい Apps Script プロジェクトを作成し、`Code.gs` の内容を貼り付けます。
-2. エディタ左側の **サービス** から **Google Drive API** を追加して有効化します。
+2. エディタ左側の **サービス** から **Google Drive API** を追加して有効化します。最初に Cloud Console で Drive API を有効化しておく必要があります。
 3. スクリプトプロパティに以下を設定します。
    - `GEMINI_API_KEY`: Gemini API キー
    - `DRIVE_FOLDER_ID`: 知識ベースを保存したフォルダの ID
@@ -32,5 +32,19 @@
 同じ回数以下に設定することで、Apps Script からの呼び出し回数を制限できます。
 また、予算アラートを設定しておくと課金が発生しそうな場合に通知を受け取れます。
 
+## 動作確認例
+Web アプリをデプロイしたら、以下のように `curl` で質問を送って動作確認できます。
+
+```bash
+curl -X POST -H "Content-Type: application/json" \
+  -d '{"question": "開館時間は？"}' \
+  "https://script.google.com/macros/s/デプロイID/exec"
+```
+フロントエンドから POST リクエストを送る際も同じ形式の JSON を渡してください。
+
 ## ライセンス
 本プロジェクトは [MIT License](LICENSE) の下で公開されています。
+
+## トラブルシューティング
+- **Drive API 関連のエラーが出る**: Apps Script の [サービス] で Drive API を追加し、Google Cloud Console 側でも API を有効化しているか確認してください。
+- **応答が返ってこない**: スクリプトエディタの [実行数] 画面でログを確認し、エラーメッセージを参照します。API キーやフォルダ ID が正しいかもチェックしてください。
