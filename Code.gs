@@ -1,7 +1,7 @@
 // Google Apps Script for the facility guide chatbot
 
 const RATE_LIMIT_SECONDS = 10; // 同じユーザーの連続質問を抑制
-const DAILY_QUOTA = 500;       // 1日の利用回数上限
+const DAILY_QUOTA = 500;       // 1日の利用回数上限 (無料枠に収まるよう調整)
 
 // Google Drive から知識ベースを取得
 function getKnowledgeText(folderId) {
