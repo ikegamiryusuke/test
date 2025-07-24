@@ -1,24 +1,29 @@
 // Google Apps Script for the facility guide chatbot
-// 動作にはスクリプトエディタの「サービス」メニューから
-// Google Drive API (Advanced Service) を追加して有効化する必要があります
+// スプレッドシートを知識ベースとして利用するチャットボット
 
 const RATE_LIMIT_SECONDS = 10; // 同じユーザーの連続質問を抑制
 const DAILY_QUOTA = 500;       // 1日の利用回数上限 (無料枠に収まるよう調整)
 
-// Google ドキュメントから知識ベースを取得
-// フォルダ単位ではなく特定のドキュメント ID を受け取るように変更
-function getKnowledgeText(documentId) {
+// スプレッドシートから知識ベースを取得
+// 指定したシート ID の1列目をすべて連結して返す
+function getKnowledgeText(sheetId) {
   let knowledge = '';
   try {
-    const doc = DocumentApp.openById(documentId);
-    const text = doc.getBody().getText();
-
-    if (text) {
-      knowledge += `\n\n--- 資料: ${doc.getName()} ---\n${text}`;
+    const ss = SpreadsheetApp.openById(sheetId);
+    const sheet = ss.getSheets()[0];
+    const values = sheet.getDataRange().getValues();
+    for (let i = 0; i < values.length; i++) {
+      const cellText = values[i][0];
+      if (cellText) {
+        knowledge += '\n' + cellText;
+      }
+    }
+    if (knowledge) {
+      knowledge = `\n\n--- 資料: ${ss.getName()} ---` + knowledge;
     }
     return knowledge;
   } catch (e) {
-    Logger.log('ドキュメント取得エラー: ' + e.toString());
+    Logger.log('シート取得エラー: ' + e.toString());
     return '';
   }
 }
@@ -95,10 +100,10 @@ function doPost(e) {
     }
 
     // メイン処理
-    const documentId = properties.getProperty('DRIVE_DOCUMENT_ID');
-    const knowledge = getKnowledgeText(documentId);
+    const sheetId = properties.getProperty('KNOWLEDGE_SHEET_ID');
+    const knowledge = getKnowledgeText(sheetId);
     if (!knowledge) {
-      throw new Error('知識ベースの読み込みに失敗しました。');
+      throw new Error('知識ベースの読み込みに失敗しました。スプレッドシートのIDや共有設定を確認してください。');
     }
 
     const answer = callGemini(question, knowledge);
