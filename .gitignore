@@ -1,0 +1,9 @@
+# Ignore clasp configuration and node modules
+.clasp.json
+node_modules/
+
+# Ignore VS Code settings
+.vscode/
+
+# Ignore Logs
+*.log
