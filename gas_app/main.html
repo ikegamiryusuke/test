@@ -25,15 +25,20 @@
           d.innerHTML = '<div class="up">▲</div><div class="num">0</div><div class="down">▼</div>';
           dialArea.appendChild(d);
         }
-        document.querySelectorAll('.digit').forEach(function(d) {
-          var idx = Number(d.dataset.idx);
-          d.querySelector('.up').addEventListener('click', function() { changeDigit(idx, 1); });
-          d.querySelector('.down').addEventListener('click', function() { changeDigit(idx, -1); });
-        });
+        var digitsEls = document.querySelectorAll('.digit');
+        for (var j = 0; j < digitsEls.length; j++) {
+          var el = digitsEls[j];
+          var idx = Number(el.dataset.idx);
+          el.querySelector('.up').addEventListener('click', function(i) { return function() { changeDigit(i, 1); }; }(idx));
+          el.querySelector('.down').addEventListener('click', function(i) { return function() { changeDigit(i, -1); }; }(idx));
+        }
       }
 
       function showSection(id) {
-        document.querySelectorAll('.screen').forEach(function(s) { s.classList.add('hidden'); });
+        var screens = document.querySelectorAll('.screen');
+        for (var i = 0; i < screens.length; i++) {
+          screens[i].classList.add('hidden');
+        }
         document.getElementById(id).classList.remove('hidden');
         var err = document.getElementById('error-msg');
         if (err) err.textContent = '';
