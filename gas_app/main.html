@@ -4,6 +4,24 @@
       var userInfo = null;
       var digits = [0,0,0,0];
       var currentProgress = '';
+      var loaderTimer = null;
+
+      function showLoader(targetMsgId) {
+        clearTimeout(loaderTimer);
+        document.getElementById('loading-overlay').classList.remove('hidden');
+        loaderTimer = setTimeout(function() {
+          hideLoader();
+          var msgEl = document.getElementById(targetMsgId);
+          if (msgEl && !msgEl.textContent) {
+            msgEl.textContent = '通信に失敗しました。Cookieを許可して再試行してください';
+          }
+        }, 5000);
+      }
+
+      function hideLoader() {
+        document.getElementById('loading-overlay').classList.add('hidden');
+        clearTimeout(loaderTimer);
+      }
 
       function createSlots() {
         slotContainer.innerHTML = '';
@@ -73,10 +91,10 @@
         var nickname = document.getElementById('nick').value.trim();
         var birthday = document.getElementById('pin').value.trim();
         if (!nickname || !birthday) return;
-        document.getElementById('loading-overlay').classList.remove('hidden');
+        showLoader('auth-msg');
         google.script.run
           .withSuccessHandler(function(res) {
-            document.getElementById('loading-overlay').classList.add('hidden');
+            hideLoader();
             if (res.status === 'error') {
               document.getElementById('auth-msg').textContent = res.message;
               return;
@@ -87,7 +105,7 @@
             updateView(res.progress, res.progress.indexOf('0') === -1);
           })
           .withFailureHandler(function() {
-            document.getElementById('loading-overlay').classList.add('hidden');
+            hideLoader();
             document.getElementById('auth-msg').textContent = 'エラーが発生しました';
           })
           .processLogin({ nickname: nickname, birthday: birthday });
@@ -96,10 +114,10 @@
       function submitDial() {
         if (!userInfo) return;
         var code = digits.join('');
-        document.getElementById('loading-overlay').classList.remove('hidden');
+        showLoader('error-msg');
         google.script.run
           .withSuccessHandler(function(res) {
-            document.getElementById('loading-overlay').classList.add('hidden');
+            hideLoader();
             if (res.error) {
               document.getElementById('error-msg').textContent = res.error;
               return;
@@ -113,7 +131,7 @@
             updateView(res.progress, res.complete);
           })
           .withFailureHandler(function() {
-            document.getElementById('loading-overlay').classList.add('hidden');
+            hideLoader();
             document.getElementById('error-msg').textContent = 'エラーが発生しました';
           })
           .submitCode({ nickname: userInfo.nickname, birthday: userInfo.birthday, code: code, row: userInfo.row });
