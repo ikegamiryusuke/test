@@ -5,31 +5,16 @@
 const RATE_LIMIT_SECONDS = 10; // 同じユーザーの連続質問を抑制
 const DAILY_QUOTA = 500;       // 1日の利用回数上限 (無料枠に収まるよう調整)
 
-// Google Drive から知識ベースを取得
-function getKnowledgeText(folderId) {
+// Google ドキュメントから知識ベースを取得
+// フォルダ単位ではなく特定のドキュメント ID を受け取るように変更
+function getKnowledgeText(documentId) {
+  let knowledge = '';
   try {
-    const folder = DriveApp.getFolderById(folderId);
-    const files = folder.getFiles();
-    let knowledge = '';
+    const doc = DocumentApp.openById(documentId);
+    const text = doc.getBody().getText();
 
-    while (files.hasNext()) {
-      const file = files.next();
-      const mimeType = file.getMimeType();
-      let text = '';
-
-      if (mimeType === 'application/pdf') {
-        const blob = file.getBlob();
-        const resource = { title: file.getName(), mimeType: 'application/vnd.google-apps.document' };
-        const tempDoc = Drive.Files.insert(resource, blob);
-        text = DocumentApp.openById(tempDoc.id).getBody().getText();
-        Drive.Files.remove(tempDoc.id);
-      } else if (mimeType === 'text/plain') {
-        text = file.getBlob().getDataAsString('UTF-8');
-      }
-
-      if (text) {
-        knowledge += `\n\n--- 資料: ${file.getName()} ---\n${text}`;
-      }
+    if (text) {
+      knowledge += `\n\n--- 資料: ${doc.getName()} ---\n${text}`;
     }
     return knowledge;
   } catch (e) {
@@ -110,8 +95,8 @@ function doPost(e) {
     }
 
     // メイン処理
-    const folderId = properties.getProperty('DRIVE_FOLDER_ID');
-    const knowledge = getKnowledgeText(folderId);
+    const documentId = properties.getProperty('DRIVE_DOCUMENT_ID');
+    const knowledge = getKnowledgeText(documentId);
     if (!knowledge) {
       throw new Error('知識ベースの読み込みに失敗しました。');
     }

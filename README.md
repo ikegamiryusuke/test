@@ -12,9 +12,10 @@
 2. エディタ左側の **サービス** から **Google Drive API** を追加して有効化します。最初に Cloud Console で Drive API を有効化しておく必要があります。
 3. スクリプトプロパティに以下を設定します。
    - `GEMINI_API_KEY`: Gemini API キー
-   - `DRIVE_FOLDER_ID`: 知識ベースを保存したフォルダの ID
-4. `Code.gs` を保存して Web アプリとしてデプロイします。
-5. Google サイト等から Web アプリの URL に対して POST リクエストを送ることで利用できます。
+   - `DRIVE_DOCUMENT_ID`: 知識ベースとして利用する Google ドキュメントの ID
+4. ドキュメントの共有設定を「リンクを知っている全員が閲覧可」に変更します。
+5. `Code.gs` を保存して Web アプリとしてデプロイします。
+6. Google サイト等から Web アプリの URL に対して POST リクエストを送ることで利用できます。
 
 ## agent.yaml
 エージェント設定ファイルとして `agent.yaml` を用意しています。`entrypoint` は `Code.gs:doPost` を指しています。
