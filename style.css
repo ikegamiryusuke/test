@@ -1,0 +1,227 @@
+/* --- 全画面リセット&フォント --- */
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: 'Trebuchet MS', 'Noto Sans JP', sans-serif;
+  height: 100vh;
+  width: 100vw;
+  background: #f3f8ff;
+  overflow: hidden;
+}
+
+/* --- ページ切替用 --- */
+.page {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity .3s;
+}
+
+/* --- 背景画像 --- */
+.bg-login {
+  background-image: url('https://i.imgur.com/m5sdGA8.jpg'); /* ログイン用背景 */
+}
+.bg-main {
+  background-image: url('https://i.imgur.com/wAN3v5K.jpg'); /* メインページ背景 */
+}
+
+/* --- タイトル --- */
+.title {
+  font-size: 2.2em;
+  color: #fff;
+  text-shadow: 1px 1px 4px #256;
+  margin-bottom: 1.5em;
+}
+
+/* --- ボタン画像 --- */
+.btn-group {
+  display: flex;
+  gap: 2em;
+  margin-bottom: 1.5em;
+}
+.btn-image {
+  width: 160px;
+  max-width: 80vw;
+  margin: 8px;
+  cursor: pointer;
+  border-radius: 1.2em;
+  box-shadow: 0 6px 24px #0002;
+  transition: transform 0.15s;
+}
+.btn-image:hover {
+  transform: scale(1.07);
+}
+
+/* --- 入力ボックス --- */
+.input-box {
+  background: rgba(255,255,255,0.92);
+  padding: 2em 2.5em;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(66, 146, 221, 0.13);
+  text-align: center;
+  min-width: 250px;
+}
+.input-box input, .input-box button {
+  width: 90%;
+  margin: 10px 0;
+  padding: 13px;
+  font-size: 1em;
+  border: 1px solid #aad;
+  border-radius: 8px;
+}
+.input-box button {
+  margin-top: 16px;
+  background: #2196f3;
+  color: #fff;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background .2s;
+}
+.input-box button:hover { background: #1769aa; }
+.error-msg {
+  color: #d32f2f;
+  margin-top: 8px;
+  font-size: 0.93em;
+}
+
+/* --- スタンプボード --- */
+.stamp-board {
+  display: flex;
+  gap: 18px;
+  margin-bottom: 28px;
+}
+.stamp-frame {
+  width: 84px;
+  height: 84px;
+  border: 3px dashed #fff;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: 0 3px 18px #abc3;
+  position: relative;
+  transition: box-shadow .3s;
+}
+.stamp-frame.stamped {
+  box-shadow: 0 0 32px #fdf50788, 0 0 16px #fffc;
+  background: #fffde4;
+}
+.stamp-frame img {
+  width: 70px;
+  height: 70px;
+  opacity: 0.36;
+  transition: opacity .3s;
+}
+.stamp-frame.stamped img {
+  opacity: 1;
+  animation: pop .45s cubic-bezier(.21,1.8,.5,1);
+}
+@keyframes pop {
+  0% { transform: scale(0.8); }
+  60% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+/* --- ダイヤル --- */
+.dial-container {
+  display: flex;
+  gap: 18px;
+  margin: 18px 0 8px 0;
+  justify-content: center;
+}
+.dial-slot {
+  width: 60px;
+  height: 60px;
+  background: #fff7e5;
+  font-size: 2.1em;
+  font-weight: bold;
+  border-radius: 12px;
+  border: 2px solid #a89f7b;
+  text-align: center;
+  line-height: 60px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+  user-select: none;
+  cursor: pointer;
+  touch-action: none;
+  transition: background .15s, border-color .15s;
+}
+.dial-slot:active {
+  background: #ffe1b5;
+  border-color: #ff9800;
+}
+
+/* --- メモ欄 --- */
+textarea#memo-input {
+  width: 82%;
+  max-width: 420px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #bbc;
+  resize: none;
+  font-size: 1em;
+  margin-top: 12px;
+  box-shadow: 0 1px 6px #bcd2;
+}
+#sync-button {
+  margin-top: 14px;
+  padding: 11px 28px;
+  font-size: 1.08em;
+  background: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 0 2px 10px #6f82;
+  transition: background .2s;
+}
+#sync-button:hover { background: #388e3c; }
+.sync-msg {
+  color: #fff;
+  text-shadow: 0 0 2px #222;
+  font-size: 0.98em;
+  margin-top: 10px;
+}
+
+/* --- 完了演出 --- */
+#complete-effect {
+  position: fixed;
+  z-index: 110;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #222b;
+  color: #fff;
+  font-size: 3.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-shadow: 0 2px 22px #ffd700, 0 0 6px #fff;
+  animation: popin 1s cubic-bezier(.25,1.5,.6,1.1);
+  font-weight: bold;
+  letter-spacing: .08em;
+}
+@keyframes popin {
+  0% { opacity: 0; transform: scale(0.78); }
+  60% { opacity: 1; transform: scale(1.14); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* --- レスポンシブ(スマホ最適化) --- */
+@media (max-width: 480px) {
+  .stamp-frame, .stamp-frame img { width: 60px; height: 60px; }
+  .dial-slot { width: 42px; height: 42px; font-size: 1.4em; line-height: 42px; }
+  .input-box { min-width: 180px; padding: 1em; }
+  textarea#memo-input { width: 98%; }
+  .btn-image { width: 100px; }
+}

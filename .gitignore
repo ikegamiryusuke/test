@@ -1,0 +1,16 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.so
+
+# Virtual environment
+venv/
+ENV/
+
+# Testing output
+htmlcov/
+.coverage
+
+# Misc
+*.log
+.DS_Store
