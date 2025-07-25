@@ -53,6 +53,19 @@ function restoreMemo() {
   $('memo-input').value = localStorage.getItem('stampMemo') || '';
 }
 
+function errorMessage(code) {
+  switch (code) {
+    case 'not found':
+      return 'ユーザーが見つかりません';
+    case 'duplicate':
+      return 'すでに登録されています';
+    case 'missing param':
+      return '必要な情報が不足しています';
+    default:
+      return code || '未知のエラー';
+  }
+}
+
 function requireUser(msgTarget) {
   if (!nickname || !pin) {
     if (msgTarget) msgTarget.textContent = '内部エラー：ユーザー情報がありません。もう一度ログインしてください。';
@@ -89,7 +102,7 @@ function login() {
     .then(r => r.json())
     .then(data => {
       if (data.error) {
-        $('login-error').textContent = data.error;
+        $('login-error').textContent = errorMessage(data.error);
       } else {
         nickname = n;
         pin = p;
@@ -106,7 +119,7 @@ function login() {
       }
     })
     .catch(() => {
-      $('login-error').textContent = '通信に失敗しました';
+        $('login-error').textContent = 'サーバに接続できません。時間をおいて再試行してください';
     });
 }
 
@@ -129,7 +142,7 @@ function syncToSheet(spotId) {
     saveToLocal();
     renderStamps();
   }).catch(() => {
-    $('sync-msg').textContent = '同期失敗';
+    $('sync-msg').textContent = 'サーバに接続できません。再ログインしてください';
   });
 }
 
