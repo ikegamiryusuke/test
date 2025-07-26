@@ -10,6 +10,26 @@ const SPOTS = [
   { spotId: 'spot3', name: 'ヤシの木', code: '9999', stampURL: '', fallbackURL: '' },
 ];
 
+function createStampBoard() {
+  const board = document.getElementById('stamp-board');
+  board.innerHTML = '';
+  SPOTS.forEach(s => {
+    const frame = document.createElement('div');
+    frame.className = 'stamp-frame';
+    frame.id = s.spotId;
+    const img = document.createElement('img');
+    if (s.stampURL) {
+      img.src = s.stampURL;
+      img.dataset.fallback = s.fallbackURL;
+      img.onerror = () => {
+        if (img.dataset.fallback) img.src = img.dataset.fallback;
+      };
+    }
+    frame.appendChild(img);
+    board.appendChild(frame);
+  });
+}
+
 function $(id) { return document.getElementById(id); }
 
 function showPage(id) {
@@ -147,6 +167,7 @@ function syncToSheet(spotId) {
 }
 
 function setup() {
+  createStampBoard();
   $('login-btn').addEventListener('click', login);
   $('sync-button').addEventListener('click', () => syncToSheet());
   $('memo-input').addEventListener('input', () => {
