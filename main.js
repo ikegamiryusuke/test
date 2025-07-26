@@ -26,7 +26,16 @@ function createStampBoard() {
       };
     }
     frame.appendChild(img);
-    board.appendChild(frame);
+    const label = document.createElement('div');
+    label.className = 'stamp-label';
+    label.textContent = s.name;
+    const wrapper = document.createElement('div');
+    wrapper.style.display = 'flex';
+    wrapper.style.flexDirection = 'column';
+    wrapper.style.alignItems = 'center';
+    wrapper.appendChild(frame);
+    wrapper.appendChild(label);
+    board.appendChild(wrapper);
   });
 }
 
