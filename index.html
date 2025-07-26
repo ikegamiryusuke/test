@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <title>スタンプラリー</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="mode-page" class="page bg-login" style="display:flex;">
+    <h1 class="title">スタンプラリー</h1>
+    <button id="choose-signin" class="auth-btn">サインイン（ログイン）</button>
+    <button id="choose-signup" class="auth-btn">サインアップ（新規登録）</button>
+  </div>
+
+  <div id="input-page" class="page bg-login" style="display:none;">
+    <div class="input-box">
+      <input id="nick" placeholder="ニックネーム" maxlength="20" autocomplete="off" />
+      <input id="pin" placeholder="誕生日4桁" maxlength="4" autocomplete="off" />
+      <button id="login-btn" class="auth-btn">送信</button>
+      <div id="login-error" class="error-msg"></div>
+    </div>
+  </div>
+
+  <div id="main-page" class="page bg-main">
+    <h1 class="title">スタンプボード</h1>
+    <div class="stamp-board" id="stamp-board">
+      <!-- JS でスタンプ枠を生成 -->
+    </div>
+    <div class="dial-container" id="dial">
+      <div class="dial-slot">0</div>
+      <div class="dial-slot">0</div>
+      <div class="dial-slot">0</div>
+      <div class="dial-slot">0</div>
+    </div>
+    <textarea id="memo-input" rows="3" placeholder="メモ"></textarea>
+    <button id="sync-button">同期</button>
+    <div id="sync-msg" class="sync-msg"></div>
+  </div>
+
+  <div id="complete-effect" style="display:none;">COMPLETE!!</div>
+  <script src="main.js"></script>
+</body>
+</html>
