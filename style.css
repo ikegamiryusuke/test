@@ -49,7 +49,7 @@ body, html {
   width: 160px;
   max-width: 80vw;
   margin: 8px;
-  cursor: pointer;
+  cursor: grab;
   border-radius: 1.2em;
   box-shadow: 0 6px 24px #0002;
   transition: transform 0.15s;
@@ -68,7 +68,7 @@ body, html {
   background: #2196f3;
   color: #fff;
   font-weight: bold;
-  cursor: pointer;
+  cursor: grab;
   transition: background 0.2s;
 }
 .auth-btn:hover {
@@ -98,7 +98,7 @@ body, html {
   color: #fff;
   border: none;
   font-weight: bold;
-  cursor: pointer;
+  cursor: grab;
   transition: background .2s;
 }
 .input-box button:hover { background: #1769aa; }
@@ -175,7 +175,7 @@ body, html {
   line-height: 60px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.18);
   user-select: none;
-  cursor: pointer;
+  cursor: grab;
   touch-action: none;
   transition: background .15s, border-color .15s;
 }
@@ -204,7 +204,7 @@ textarea#memo-input {
   color: white;
   border: none;
   border-radius: 7px;
-  cursor: pointer;
+  cursor: grab;
   font-weight: bold;
   box-shadow: 0 2px 10px #6f82;
   transition: background .2s;

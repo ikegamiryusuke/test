@@ -108,19 +108,76 @@ function requireUser(msgTarget) {
   return true;
 }
 
-function cycleDigit(el) {
-  let num = parseInt(el.textContent, 10);
-  num = (num + 1) % 10;
-  el.textContent = String(num);
+let enteredDigits = [0, 0, 0, 0];
+let dialStartY = [];
+
+function initDial() {
+  const slots = document.querySelectorAll('#dial .dial-slot');
+  slots.forEach((slot, i) => {
+    slot.textContent = '0';
+    slot.addEventListener('pointerdown', ev => {
+      dialStartY[i] = ev.clientY;
+      slot.setPointerCapture(ev.pointerId);
+    });
+    slot.addEventListener('pointermove', ev => {
+      if (dialStartY[i] == null) return;
+      const delta = ev.clientY - dialStartY[i];
+      if (Math.abs(delta) >= 20) {
+        const steps = Math.floor(delta / 20);
+        rotateDigit(i, steps);
+        dialStartY[i] = ev.clientY;
+      }
+    });
+    slot.addEventListener('pointerup', ev => {
+      dialStartY[i] = null;
+      slot.releasePointerCapture(ev.pointerId);
+    });
+    slot.addEventListener('pointercancel', ev => {
+      dialStartY[i] = null;
+      slot.releasePointerCapture(ev.pointerId);
+    });
+  });
 }
 
-function getDialValue() {
-  return Array.from(document.querySelectorAll('#dial .dial-slot'))
-    .map(el => el.textContent).join('');
+function rotateDigit(i, step) {
+  if (step === 0) return;
+  enteredDigits[i] = (enteredDigits[i] - step + 10) % 10;
+  document.querySelectorAll('.dial-slot')[i].textContent = enteredDigits[i];
+  checkCode();
 }
 
 function resetDial() {
-  document.querySelectorAll('#dial .dial-slot').forEach(el => el.textContent = '0');
+  enteredDigits = [0, 0, 0, 0];
+  document.querySelectorAll('.dial-slot').forEach(el => (el.textContent = '0'));
+}
+
+function checkCode() {
+  const code = enteredDigits.join('');
+  SPOTS.some(spot => {
+    if (!stampsState[spot.spotId] && code === spot.code) {
+      stampsState[spot.spotId] = true;
+      triggerStamp(spot);
+      return true;
+    }
+    return false;
+  });
+}
+
+function triggerStamp(spot) {
+  const container = $(spot.spotId);
+  const img = container.querySelector('img');
+  img.src = spot.stampURL;
+  img.onerror = () => {
+    if (spot.fallbackURL) img.src = spot.fallbackURL;
+  };
+  img.style.display = 'block';
+  container.classList.add('stamped');
+  syncToSheet(spot.spotId);
+  resetDial();
+
+  if (Object.values(stampsState).every(v => v)) {
+    $('complete-effect').style.display = 'flex';
+  }
 }
 
 function login() {
@@ -214,22 +271,7 @@ function setup() {
   $('memo-input').addEventListener('input', () => {
     localStorage.setItem('stampMemo', $('memo-input').value);
   });
-  document.querySelectorAll('#dial .dial-slot').forEach(el => {
-    el.addEventListener('click', () => {
-      cycleDigit(el);
-      const val = getDialValue();
-      SPOTS.forEach(s => {
-        if (val === s.code && !$(s.spotId).classList.contains('stamped')) {
-          $(s.spotId).classList.add('stamped');
-          syncToSheet(s.spotId);
-          resetDial();
-          if (document.querySelectorAll('.stamp-frame.stamped').length === SPOTS.length) {
-            $('complete-effect').style.display = 'flex';
-          }
-        }
-      });
-    });
-  });
+  initDial();
   restoreFromLocal();
 }
 
