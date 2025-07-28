@@ -43,7 +43,15 @@ function doGetApi(e) {
 }
 
 function doPost(e) {
-  var data = JSON.parse(e.postData.contents);
+  if (!e || !e.postData || !e.postData.contents) {
+    return outputJson({ error: 'missing param' });
+  }
+  var data;
+  try {
+    data = JSON.parse(e.postData.contents);
+  } catch (err) {
+    return outputJson({ error: 'invalid json' });
+  }
   if (!data.nickname || !data.pin) {
     return outputJson({ error: 'missing param' });
   }

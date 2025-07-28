@@ -67,6 +67,17 @@ python main.py
 python -m pytest -q
 ```
 
+## トラブルシューティング
+`{"error":"missing param"}` が返る場合は、`nickname` または `pin`
+が正しく送信されていない可能性があります。以下を確認してください。
+
+1. `WEBAPP_URL` が正しく設定されているか
+2. `SHEET_ID` をスクリプトプロパティに登録しているか
+3. ブラウザの開発者ツールで送信パラメータを確認する
+
+これらを見直しても解決しないときは、GAS のログに
+`nickname` と `pin` の値を出力して原因を調査してください。
+
 ## ファイル構成
 - `Code.gs` – GAS バックエンド
 - `index.html`, `main.js`, `style.css` – フロントエンド
