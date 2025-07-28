@@ -1,0 +1,80 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  font-family: 'Trebuchet MS', 'Noto Sans JP', sans-serif;
+  background: url('https://imgur.com/Ctpg1SI.png') center/cover no-repeat;
+  overflow: hidden;
+}
+.page {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.3);
+}
+.title {
+  font-size: 2em;
+  color: #fff;
+  text-shadow: 1px 1px 4px #000;
+  margin-bottom: 1em;
+}
+.btn-row { display: flex; gap: 20px; }
+.main-btn, .action-btn, .back-btn {
+  width: 140px; height: 56px;
+  border: none; border-radius: 12px;
+  font-size: 1em; font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+.main-btn { background: #2196f3; color: #fff; }
+.action-btn { background: #43a047; color: #fff; }
+.back-btn   { background: #90a4ae; color: #fff; }
+.input-box {
+  background: #fff; padding: 1.5em;
+  border-radius: 12px; width: 90%; max-width: 320px;
+  text-align: center; box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+.input-box input {
+  width: 100%; margin: 8px 0; padding: 10px;
+  font-size: 1em; border: 1px solid #aac;
+  border-radius: 8px; box-sizing: border-box;
+}
+.input-mode-label { font-size: 1.1em; margin-bottom: 6px; font-weight: bold; }
+.error-msg, .sync-msg { color: #f44336; margin-top: 8px; font-size: 0.9em; }
+.stamp-board {
+  display: flex; gap: 16px; margin-bottom: 20px;
+  flex-wrap: wrap; justify-content: center;
+}
+.stamp-frame {
+  width: 72px; height: 72px; background: #eee;
+  border: 3px dashed #fff; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.stamp-frame.stamped { box-shadow: 0 0 24px #fdd835; }
+.stamp-frame img { width: 64px; height: 64px; opacity: .4; }
+.stamp-frame.stamped img { opacity: 1; animation: pop .4s cubic-bezier(.21,1.8,.5,1); }
+@keyframes pop { 0% { transform: scale(0.8);} 60% { transform: scale(1.2);} 100% { transform: scale(1);} }
+.dial-container { display: flex; gap: 12px; margin-bottom: 12px; }
+.dial-slot {
+  width: 56px; height: 56px; background: #fff7e5;
+  border: 2px solid #a89f7b; border-radius: 8px;
+  font: bold 1.8em/56px monospace; text-align: center; cursor: pointer;
+}
+.overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.8);
+  display: flex; align-items: center; justify-content: center; z-index: 100;
+}
+.overlay img { max-width: 96vw; max-height: 96vh; }
+#spark-message {
+  display: none; position: fixed; inset: 0; z-index: 2000;
+  align-items: center; justify-content: center;
+  font-size: 2.8em; color: #fff700;
+  text-shadow: 2px 2px 8px #d62, 0 0 30px #fff;
+  font-family: 'Trebuchet MS', 'Noto Sans JP', sans-serif;
+  background: rgba(0,0,0,0.4); pointer-events: none;
+}
