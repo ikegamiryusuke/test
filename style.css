@@ -255,7 +255,7 @@ textarea#memo-input {
   align-items: center;
   justify-content: center;
   text-shadow: 0 2px 22px #ffd700, 0 0 6px #fff;
-  animation: popin 1s cubic-bezier(.25,1.5,.6,1.1);
+  animation: popin 1s cubic-bezier(.25,1.5,.6,1.1), rainbow 4s linear infinite;
   font-weight: bold;
   letter-spacing: .08em;
 }
@@ -263,6 +263,10 @@ textarea#memo-input {
   0% { opacity: 0; transform: scale(0.78); }
   60% { opacity: 1; transform: scale(1.14); }
   100% { opacity: 1; transform: scale(1); }
+}
+@keyframes rainbow {
+  0% { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(360deg); }
 }
 
 /* --- レスポンシブ(スマホ最適化) --- */

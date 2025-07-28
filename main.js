@@ -236,11 +236,18 @@ function triggerStamp(spot) {
   };
   img.style.display = 'block';
   container.classList.add('stamped');
+  const seStamp = document.getElementById('se-stamp');
+  if (seStamp) seStamp.play().catch(() => {});
   syncToSheet(spot.spotId);
   resetDial();
 
   if (Object.values(stampsState).every(v => v)) {
     $('complete-effect').style.display = 'flex';
+    const seComplete = document.getElementById('se-complete');
+    if (seComplete) seComplete.play().catch(() => {});
+    setTimeout(() => {
+      $('complete-effect').style.display = 'none';
+    }, 4000);
   }
 }
 
