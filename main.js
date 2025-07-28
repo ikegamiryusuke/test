@@ -6,9 +6,27 @@ let stampsState = {};
 let authMode = '';
 
 const SPOTS = [
-  { spotId: 'spot1', name: 'クジラ', code: '1234', stampURL: '', fallbackURL: '' },
-  { spotId: 'spot2', name: 'ヨット', code: '5678', stampURL: '', fallbackURL: '' },
-  { spotId: 'spot3', name: 'ヤシの木', code: '9999', stampURL: '', fallbackURL: '' },
+  {
+    spotId: 'spot1',
+    name: 'クジラ',
+    code: '1234',
+    stampURL: 'https://i.imgur.com/bvgNF9A.png',
+    fallbackURL: ''
+  },
+  {
+    spotId: 'spot2',
+    name: 'ヨット',
+    code: '5678',
+    stampURL: 'https://i.imgur.com/Za5d3PQ.png',
+    fallbackURL: ''
+  },
+  {
+    spotId: 'spot3',
+    name: 'ヤシの木',
+    code: '9999',
+    stampURL: 'https://i.imgur.com/MSjf7Sr.png',
+    fallbackURL: ''
+  }
 ];
 
 function createStampBoard() {

@@ -34,6 +34,16 @@
 | 矢印下 | ダイヤル↓ボタン | <https://i.imgur.com/iCW495w.png> |
 | 数字「0」〜「9」 | ダイヤル内の数字 | 各 URL はソース参照 |
 
+### 背景とスタンプ画像
+
+| 種別 | 用途 | URL |
+| --- | --- | --- |
+| ログイン画面背景 | サインイン／サインアップ画面の背景 | <https://i.imgur.com/m5sdGA8.jpg> |
+| メイン画面背景 | スタンプボード表示時の背景 | <https://i.imgur.com/wAN3v5K.jpg> |
+| spot1 | クジラのスタンプ | <https://i.imgur.com/bvgNF9A.png> |
+| spot2 | ヨットのスタンプ | <https://i.imgur.com/Za5d3PQ.png> |
+| spot3 | ヤシの木のスタンプ | <https://i.imgur.com/MSjf7Sr.png> |
+
 
 ## Python スクリプトの利用 (任意)
 `main.py` は GAS を呼び出すサンプルです。依存パッケージを
