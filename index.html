@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#607d8b">
+  <title>スタンプラリー</title>
+  <style>
+  <?!= include('style'); ?>
+  </style>
+</head>
+<body>
+  <div id="mode-page" class="page bg-login" style="display:flex;">
+    <h1 class="title">スタンプラリー</h1>
+    <button id="choose-signin" class="auth-btn">サインイン（ログイン）</button>
+    <button id="choose-signup" class="auth-btn">サインアップ（新規登録）</button>
+  </div>
+
+  <div id="input-page" class="page bg-login" style="display:none;">
+    <div class="input-box">
+      <input id="nick" placeholder="ニックネーム" maxlength="20" autocomplete="off" />
+      <input id="pin" placeholder="誕生日4桁" maxlength="4" autocomplete="off" />
+      <button id="login-btn" class="auth-btn">送信</button>
+      <div id="login-error" class="error-msg"></div>
+    </div>
+  </div>
+
+  <div id="main-page" class="page bg-main">
+    <h1 class="title">スタンプボード</h1>
+    <div class="stamp-board" id="stamp-board">
+      <!-- JS でスタンプ枠を生成 -->
+    </div>
+    <div class="dial-container" id="dial">
+      <!-- JS でダイヤルスロットを生成 -->
+    </div>
+    <textarea id="memo-input" rows="3" placeholder="メモ"></textarea>
+    <button id="sync-button">同期</button>
+    <div id="sync-msg" class="sync-msg"></div>
+  </div>
+
+  <div id="complete-effect" style="display:none;">COMPLETE!!</div>
+  <div id="orientation-warning" class="orientation-warning" style="display:none;">
+    画面を縦向きにしてください
+  </div>
+  <audio id="se-stamp" src="https://drive.google.com/uc?export=download&id=STAMP_FILE_ID" preload="auto"></audio>
+  <audio id="se-dial" src="https://drive.google.com/uc?export=download&id=DIAL_FILE_ID" preload="auto"></audio>
+  <audio id="se-complete" src="https://drive.google.com/uc?export=download&id=COMPLETE_FILE_ID" preload="auto"></audio>
+  <script>
+  <?!= include('main'); ?>
+  </script>
+</body>
+</html>
