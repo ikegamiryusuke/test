@@ -5,6 +5,7 @@ import sys
 
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 import main
+import requests
 
 
 def test_run(mocker):
@@ -23,3 +24,10 @@ def test_run(mocker):
     main.run()
     builtins.print.assert_any_call("GASからの返答:")
     builtins.print.assert_any_call("ok")
+
+
+def test_run_request_exception(mocker):
+    mocker.patch('requests.get', side_effect=requests.RequestException('err'))
+    mocker.patch.object(builtins, 'print')
+    main.run()
+    builtins.print.assert_any_call('リクエスト中にエラーが発生しました:', mocker.ANY)

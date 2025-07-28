@@ -11,22 +11,35 @@ const SPOTS = [
     name: 'クジラ',
     code: '1234',
     stampURL: 'https://i.imgur.com/bvgNF9A.png',
-    fallbackURL: ''
+    fallbackURL: 'https://i.imgur.com/bvgNF9A.png'
   },
   {
     spotId: 'spot2',
     name: 'ヨット',
     code: '5678',
     stampURL: 'https://i.imgur.com/Za5d3PQ.png',
-    fallbackURL: ''
+    fallbackURL: 'https://i.imgur.com/Za5d3PQ.png'
   },
   {
     spotId: 'spot3',
     name: 'ヤシの木',
     code: '9999',
     stampURL: 'https://i.imgur.com/MSjf7Sr.png',
-    fallbackURL: ''
+    fallbackURL: 'https://i.imgur.com/MSjf7Sr.png'
   }
+];
+
+const DIGIT_IMAGES = [
+  'https://i.imgur.com/GHSxVu9.png',
+  'https://i.imgur.com/Xl5wfjV.png',
+  'https://i.imgur.com/yatEQu7.png',
+  'https://i.imgur.com/XigHeh1.png',
+  'https://i.imgur.com/O9rHaSK.png',
+  'https://i.imgur.com/3LtxEO9.png',
+  'https://i.imgur.com/VZKWZvY.png',
+  'https://i.imgur.com/864NE8L.png',
+  'https://i.imgur.com/ogZFbNo.png',
+  'https://i.imgur.com/DFky1KH.png'
 ];
 
 function createStampBoard() {
@@ -129,15 +142,40 @@ function requireUser(msgTarget) {
 let enteredDigits = [0, 0, 0, 0];
 let dialStartY = [];
 
+function createDialSlots() {
+  const dial = document.getElementById('dial');
+  dial.innerHTML = '';
+  for (let i = 0; i < 4; i++) {
+    const slot = document.createElement('div');
+    slot.className = 'dial-slot';
+    const up = document.createElement('button');
+    up.className = 'dial-arrow dial-up';
+    up.innerHTML = `<img src="https://i.imgur.com/CcRJgcL.png" loading="lazy" decoding="async" alt="up">`;
+    const digit = document.createElement('img');
+    digit.className = 'dial-digit';
+    digit.dataset.index = i;
+    digit.src = DIGIT_IMAGES[0];
+    digit.loading = 'lazy';
+    digit.decoding = 'async';
+    const down = document.createElement('button');
+    down.className = 'dial-arrow dial-down';
+    down.innerHTML = `<img src="https://i.imgur.com/iCW495w.png" loading="lazy" decoding="async" alt="down">`;
+    slot.appendChild(up);
+    slot.appendChild(digit);
+    slot.appendChild(down);
+    dial.appendChild(slot);
+  }
+}
+
 function initDial() {
-  const slots = document.querySelectorAll('#dial .dial-slot');
-  slots.forEach((slot, i) => {
-    slot.textContent = '0';
-    slot.addEventListener('pointerdown', ev => {
+  createDialSlots();
+  const digits = document.querySelectorAll('.dial-digit');
+  digits.forEach((img, i) => {
+    img.addEventListener('pointerdown', ev => {
       dialStartY[i] = ev.clientY;
-      slot.setPointerCapture(ev.pointerId);
+      img.setPointerCapture(ev.pointerId);
     });
-    slot.addEventListener('pointermove', ev => {
+    img.addEventListener('pointermove', ev => {
       if (dialStartY[i] == null) return;
       const delta = ev.clientY - dialStartY[i];
       if (Math.abs(delta) >= 20) {
@@ -146,27 +184,34 @@ function initDial() {
         dialStartY[i] = ev.clientY;
       }
     });
-    slot.addEventListener('pointerup', ev => {
+    img.addEventListener('pointerup', ev => {
       dialStartY[i] = null;
-      slot.releasePointerCapture(ev.pointerId);
+      img.releasePointerCapture(ev.pointerId);
     });
-    slot.addEventListener('pointercancel', ev => {
+    img.addEventListener('pointercancel', ev => {
       dialStartY[i] = null;
-      slot.releasePointerCapture(ev.pointerId);
+      img.releasePointerCapture(ev.pointerId);
     });
+  });
+
+  document.querySelectorAll('.dial-up').forEach((btn, i) => {
+    btn.addEventListener('click', () => rotateDigit(i, -1));
+  });
+  document.querySelectorAll('.dial-down').forEach((btn, i) => {
+    btn.addEventListener('click', () => rotateDigit(i, 1));
   });
 }
 
 function rotateDigit(i, step) {
   if (step === 0) return;
   enteredDigits[i] = (enteredDigits[i] - step + 10) % 10;
-  document.querySelectorAll('.dial-slot')[i].textContent = enteredDigits[i];
+  document.querySelectorAll('.dial-digit')[i].src = DIGIT_IMAGES[enteredDigits[i]];
   checkCode();
 }
 
 function resetDial() {
   enteredDigits = [0, 0, 0, 0];
-  document.querySelectorAll('.dial-slot').forEach(el => (el.textContent = '0'));
+  document.querySelectorAll('.dial-digit').forEach((img) => (img.src = DIGIT_IMAGES[0]));
 }
 
 function checkCode() {
@@ -184,9 +229,10 @@ function checkCode() {
 function triggerStamp(spot) {
   const container = $(spot.spotId);
   const img = container.querySelector('img');
+  img.dataset.fallback = spot.fallbackURL;
   img.src = spot.stampURL;
   img.onerror = () => {
-    if (spot.fallbackURL) img.src = spot.fallbackURL;
+    if (img.dataset.fallback) img.src = img.dataset.fallback;
   };
   img.style.display = 'block';
   container.classList.add('stamped');
@@ -214,7 +260,10 @@ function login() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body)
     })
-      .then(r => r.json())
+      .then(r => {
+        if (!r.ok) throw new Error('server');
+        return r.json();
+      })
       .then(data => {
         if (data.error) {
           $('login-error').textContent = errorMessage(data.error);
@@ -230,12 +279,19 @@ function login() {
           renderStamps();
         }
       })
-      .catch(() => {
-        $('login-error').textContent = 'サーバに接続できません。時間をおいて再試行してください';
+      .catch(err => {
+        if (err.message === 'server') {
+          $('login-error').textContent = 'サーバー側でエラーが発生しました';
+        } else {
+          $('login-error').textContent = 'タイムアウトしました';
+        }
       });
   } else {
     fetch(`${WEBAPP_URL}?nickname=${encodeURIComponent(n)}&pin=${encodeURIComponent(p)}`)
-      .then(r => r.json())
+      .then(r => {
+        if (!r.ok) throw new Error('server');
+        return r.json();
+      })
       .then(data => {
         if (data.error) {
           $('login-error').textContent = errorMessage(data.error);
@@ -251,8 +307,12 @@ function login() {
           renderStamps();
         }
       })
-      .catch(() => {
-        $('login-error').textContent = 'サーバに接続できません。時間をおいて再試行してください';
+      .catch(err => {
+        if (err.message === 'server') {
+          $('login-error').textContent = 'サーバー側でエラーが発生しました';
+        } else {
+          $('login-error').textContent = 'タイムアウトしました';
+        }
       });
   }
 }
@@ -270,14 +330,24 @@ function syncToSheet(spotId) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body)
-  }).then(r => r.json()).then(() => {
-    $('sync-msg').textContent = '同期しました';
-    localStorage.setItem('stampMemo', $('memo-input').value);
-    saveToLocal();
-    renderStamps();
-  }).catch(() => {
-    $('sync-msg').textContent = 'サーバに接続できません。再ログインしてください';
-  });
+  })
+    .then(r => {
+      if (!r.ok) throw new Error('server');
+      return r.json();
+    })
+    .then(() => {
+      $('sync-msg').textContent = '同期しました';
+      localStorage.setItem('stampMemo', $('memo-input').value);
+      saveToLocal();
+      renderStamps();
+    })
+    .catch(err => {
+      if (err.message === 'server') {
+        $('sync-msg').textContent = 'サーバー側でエラーが発生しました';
+      } else {
+        $('sync-msg').textContent = 'タイムアウトしました';
+      }
+    });
 }
 
 function setup() {
