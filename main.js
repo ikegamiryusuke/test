@@ -192,6 +192,9 @@ function initDial() {
       dialStartY[i] = null;
       img.releasePointerCapture(ev.pointerId);
     });
+    img.addEventListener('transitionend', () => {
+      img.classList.remove('spin-up', 'spin-down');
+    });
   });
 
   document.querySelectorAll('.dial-up').forEach((btn, i) => {
@@ -205,7 +208,20 @@ function initDial() {
 function rotateDigit(i, step) {
   if (step === 0) return;
   enteredDigits[i] = (enteredDigits[i] - step + 10) % 10;
-  document.querySelectorAll('.dial-digit')[i].src = DIGIT_IMAGES[enteredDigits[i]];
+  const img = document.querySelectorAll('.dial-digit')[i];
+  img.classList.remove('spin-up', 'spin-down');
+  void img.offsetWidth; // reflow for restart animation
+  img.src = DIGIT_IMAGES[enteredDigits[i]];
+  if (step > 0) {
+    img.classList.add('spin-down');
+  } else {
+    img.classList.add('spin-up');
+  }
+  const seDial = document.getElementById('se-dial');
+  if (seDial) {
+    seDial.currentTime = 0;
+    seDial.play().catch(() => {});
+  }
   checkCode();
 }
 
