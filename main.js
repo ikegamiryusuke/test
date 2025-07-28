@@ -117,6 +117,16 @@ function restoreMemo() {
   $('memo-input').value = localStorage.getItem('stampMemo') || '';
 }
 
+function checkOrientation() {
+  const warn = document.getElementById('orientation-warning');
+  if (!warn) return;
+  if (window.matchMedia('(orientation: portrait)').matches) {
+    warn.style.display = 'none';
+  } else {
+    warn.style.display = 'flex';
+  }
+}
+
 function errorMessage(code) {
   switch (code) {
     case 'not found':
@@ -236,6 +246,7 @@ function rotateDigit(i, step) {
     seDial.currentTime = 0;
     seDial.play().catch(() => {});
   }
+  if (navigator.vibrate) navigator.vibrate(10);
   checkCode();
 }
 
@@ -269,6 +280,7 @@ function triggerStamp(spot) {
   spawnParticles(container);
   const seStamp = document.getElementById('se-stamp');
   if (seStamp) seStamp.play().catch(() => {});
+  if (navigator.vibrate) navigator.vibrate([20, 40, 20]);
   syncToSheet(spot.spotId);
   resetDial();
 
@@ -277,6 +289,7 @@ function triggerStamp(spot) {
     spawnParticles(document.getElementById('complete-effect'), 40);
     const seComplete = document.getElementById('se-complete');
     if (seComplete) seComplete.play().catch(() => {});
+    if (navigator.vibrate) navigator.vibrate([100, 30, 100]);
     setTimeout(() => {
       $('complete-effect').style.display = 'none';
     }, 4000);
@@ -398,8 +411,11 @@ function setup() {
   $('memo-input').addEventListener('input', () => {
     localStorage.setItem('stampMemo', $('memo-input').value);
   });
+  window.addEventListener('resize', checkOrientation);
+  window.addEventListener('orientationchange', checkOrientation);
   initDial();
   restoreFromLocal();
+  checkOrientation();
 }
 
 document.addEventListener('DOMContentLoaded', setup);
