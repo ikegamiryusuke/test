@@ -278,6 +278,24 @@ textarea#memo-input {
   100% { filter: hue-rotate(360deg); }
 }
 
+/* --- 紙吹雪パーティクル --- */
+.particle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color, #ffeb3b);
+  pointer-events: none;
+  animation: particle-move 0.6s forwards ease-out;
+}
+
+@keyframes particle-move {
+  from { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  to   { transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) scale(0.5); opacity: 0; }
+}
+
 /* --- レスポンシブ(スマホ最適化) --- */
 @media (max-width: 480px) {
   .stamp-frame, .stamp-frame img { width: 60px; height: 60px; }

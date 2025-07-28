@@ -139,6 +139,20 @@ function requireUser(msgTarget) {
   return true;
 }
 
+function spawnParticles(target, count = 12) {
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const angle = Math.random() * Math.PI * 2;
+    const dist = 40 + Math.random() * 20;
+    p.style.setProperty('--x', Math.cos(angle) * dist + 'px');
+    p.style.setProperty('--y', Math.sin(angle) * dist + 'px');
+    p.style.setProperty('--color', `hsl(${Math.floor(Math.random()*360)},80%,60%)`);
+    target.appendChild(p);
+    setTimeout(() => p.remove(), 600);
+  }
+}
+
 let enteredDigits = [0, 0, 0, 0];
 let dialStartY = [];
 
@@ -252,6 +266,7 @@ function triggerStamp(spot) {
   };
   img.style.display = 'block';
   container.classList.add('stamped');
+  spawnParticles(container);
   const seStamp = document.getElementById('se-stamp');
   if (seStamp) seStamp.play().catch(() => {});
   syncToSheet(spot.spotId);
@@ -259,6 +274,7 @@ function triggerStamp(spot) {
 
   if (Object.values(stampsState).every(v => v)) {
     $('complete-effect').style.display = 'flex';
+    spawnParticles(document.getElementById('complete-effect'), 40);
     const seComplete = document.getElementById('se-complete');
     if (seComplete) seComplete.play().catch(() => {});
     setTimeout(() => {
