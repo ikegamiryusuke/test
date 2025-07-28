@@ -249,6 +249,20 @@ textarea#memo-input {
   margin-top: 10px;
 }
 
+/* --- PCアクセス警告 --- */
+#pc-warning {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #222;
+  color: #fff;
+  z-index: 200;
+  font-size: 1.2em;
+  text-align: center;
+}
+
 /* --- 完了演出 --- */
 #complete-effect {
   position: fixed;
