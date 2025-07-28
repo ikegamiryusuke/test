@@ -6,7 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#607d8b">
   <title>スタンプラリー</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+  <?!= include('style'); ?>
+  </style>
 </head>
 <body>
   <div id="mode-page" class="page bg-login" style="display:flex;">
@@ -44,6 +46,8 @@
   <audio id="se-stamp" src="https://drive.google.com/uc?export=download&id=STAMP_FILE_ID" preload="auto"></audio>
   <audio id="se-dial" src="https://drive.google.com/uc?export=download&id=DIAL_FILE_ID" preload="auto"></audio>
   <audio id="se-complete" src="https://drive.google.com/uc?export=download&id=COMPLETE_FILE_ID" preload="auto"></audio>
-  <script src="main.js"></script>
+  <script>
+  <?!= include('main'); ?>
+  </script>
 </body>
 </html>
