@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>思いでスタンプラリー</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <section id="mode-page" class="page">
+    <h1 class="title">思いでスタンプラリー</h1>
+    <div class="btn-row">
+      <button id="choose-signin" class="main-btn">サインイン</button>
+      <button id="choose-signup" class="main-btn">サインアップ</button>
+    </div>
+  </section>
+
+  <section id="input-page" class="page" style="display:none">
+    <div class="input-box">
+      <div id="input-mode-label" class="input-mode-label">モード</div>
+      <input id="nick" placeholder="ニックネーム" maxlength="20">
+      <input id="pin" type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="4" placeholder="誕生日4桁">
+      <button id="login-btn" class="action-btn">送信</button>
+      <button id="back-btn" class="back-btn">← 戻る</button>
+      <div id="login-error" class="error-msg"></div>
+    </div>
+  </section>
+
+  <section id="main-page" class="page" style="display:none">
+    <h1 class="title">思いでスタンプボード</h1>
+    <div id="stamp-board" class="stamp-board"></div>
+    <div class="dial-controls">
+      <button id="dial-up" class="action-btn">↑</button>
+      <div id="dial" class="dial-container">
+        <div class="dial-slot">0</div>
+        <div class="dial-slot">0</div>
+        <div class="dial-slot">0</div>
+        <div class="dial-slot">0</div>
+      </div>
+      <button id="dial-down" class="action-btn">↓</button>
+    </div>
+    <textarea id="comment-input" placeholder="思い出コメントを残す (任意)" rows="2"></textarea>
+    <button id="sync-button" class="action-btn">同期</button>
+    <div id="sync-msg" class="sync-msg"></div>
+  </section>
+
+  <div id="stamp-overlay" class="overlay" style="display:none">
+    <img id="overlay-img" src="">
+  </div>
+  <div id="complete-effect" class="overlay" style="display:none">
+    <img src="https://imgur.com/E88RGvy.png" alt="COMPLETE">
+  </div>
+
+  <div id="spark-message">いつもありがとう！</div>
+  <audio id="se-decision" src="https://soundeffect-lab.info/sound/decision26.mp3"></audio>
+  <audio id="se-complete" src="https://soundeffect-lab.info/sound/complete02.mp3"></audio>
+  <script src="./main.js"></script>
+</body>
+</html>
