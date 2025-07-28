@@ -402,12 +402,4 @@ function setup() {
   restoreFromLocal();
 }
 
-function checkMobile() {
-  if (window.innerWidth > 600 && !/Mobi/i.test(navigator.userAgent)) {
-    document.getElementById('pc-warning').style.display = 'flex';
-  } else {
-    setup();
-  }
-}
-
-document.addEventListener('DOMContentLoaded', checkMobile);
+document.addEventListener('DOMContentLoaded', setup);
