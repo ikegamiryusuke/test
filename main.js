@@ -19,6 +19,9 @@ function createStampBoard() {
     frame.className = 'stamp-frame';
     frame.id = s.spotId;
     const img = document.createElement('img');
+    img.alt = s.name;
+    img.decoding = 'async';
+    img.loading = 'lazy';
     if (s.stampURL) {
       img.src = s.stampURL;
       img.dataset.fallback = s.fallbackURL;
